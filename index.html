@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TKD Manager V3.6 Complete｜私人管理系統</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f5fa;color:#172b4d;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif}header{background:#173b73;color:#fff;padding:22px 18px}header h1{margin:0;font-size:26px}header small{opacity:.85}main{max-width:1000px;margin:24px auto;padding:0 16px}.panel{background:white;border-radius:14px;padding:22px;box-shadow:0 2px 12px #12274a12;margin-bottom:16px}h2{margin-top:0}label{display:block;margin:12px 0 5px;font-weight:600}input,select,textarea{font-size:16px;width:100%;padding:11px;border:1px solid #b8c5d8;border-radius:8px;font:inherit}button{min-height:44px;border:0;border-radius:8px;background:#173b73;color:white;padding:11px 17px;font:inherit;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.secondary{background:#e7edf5;color:#173b73}.danger{background:#b42318}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.message{min-height:1.5em;color:#a12424}.ok{color:#17603a}.student{border-top:1px solid #e4e9f1;padding:14px 0;display:flex;justify-content:space-between;gap:12px;align-items:center}.student small{color:#53647a}.actions{display:flex;gap:8px;flex-wrap:wrap}.muted{color:#596b82;font-size:14px}[hidden]{display:none!important}@media(max-width:600px){.row{grid-template-columns:1fr}.student{align-items:flex-start;flex-direction:column}}
+.stat{padding:15px;border:1px solid #e4e9f1;border-radius:10px;display:flex;flex-direction:column;gap:6px}.stat strong{font-size:25px}.stat span{color:#596b82;font-size:14px}#resultCount{margin:12px 0 4px}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #4f8bff;outline-offset:2px}
+/* V3 class management */
+.tabbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tabbar button[aria-selected="true"]{background:#173b73;color:white}.tabbar button[aria-selected="false"]{background:#e7edf5;color:#173b73}.class-entry{padding:14px 0;border-top:1px solid #e4e9f1}.class-entry:first-child{border-top:0}.class-entry .muted{margin:5px 0}.small-button{padding:7px 12px;min-height:38px}.inline-help{padding:10px;background:#f2f5fa;border-radius:8px}
+/* V3.2 attendance */
+.attendance-entry{border-top:1px solid #e4e9f1;padding:15px 0}.attendance-entry:first-child{border-top:0}.attendance-entry h3{font-size:16px;margin:0 0 10px}.attendance-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.attendance-stats .stat{padding:10px}.attendance-stats .stat strong{font-size:21px}.hint{background:#f3f7fb;border-left:3px solid #173b73;padding:12px;border-radius:6px}.attendance-footer{display:flex;gap:10px;flex-wrap:wrap}.attendance-footer button{flex:1}.attendance-dirty{color:#9a3412;font-weight:600}@media(max-width:600px){.attendance-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* V3.3 leave and makeup */
+.credit-line{padding:14px 0;border-top:1px solid #e4e9f1}.credit-line:first-child{border-top:0}.pill-note{display:inline-block;border-radius:20px;background:#e7edf5;padding:4px 9px;font-size:13px;color:#173b73}.v33-actions{display:flex;gap:8px;align-items:end;flex-wrap:wrap}.v33-actions button{min-width:95px}.v33-actions select{max-width:170px}.v33-card-title{font-weight:700;margin:0 0 6px}.v33-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}@media(max-width:600px){.v33-metrics{grid-template-columns:1fr}}
+
+/* V3.4 tuition */
+.fee-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.fee-row{border-top:1px solid #e4e9f1;padding:12px 0}.fee-row:first-child{border-top:0}.fee-amount{font-variant-numeric:tabular-nums;font-weight:700}.fee-panel-help{background:#f3f7fb;padding:12px;border-radius:8px;margin:10px 0}.fee-actions{display:flex;gap:8px;flex-wrap:wrap}.fee-small{font-size:13px;color:#596b82}.fee-summary strong{font-size:22px}@media(max-width:600px){.fee-summary{grid-template-columns:1fr}}
+/* V3.5A finance correction controls */
+.fee-safe-form{border:1px solid #e3e9f2;border-radius:10px;padding:14px;margin:8px 0 15px;min-width:0}
+.fee-safe-form h3{margin:0 0 8px;font-size:17px}.fee-safe-form .danger{background:#9f2525}
+.fee-audit-item{border-top:1px solid #e4e9f1;padding:12px 0}
+.fee-audit-item:first-child{border-top:0}.fee-audit-item small{display:block;color:#596b82;margin-top:5px}
+/* V3.6 layout */
+.v36-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v36-quick{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.v36-report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v36-table{width:100%;border-collapse:collapse;font-size:14px}.v36-table th,.v36-table td{padding:9px;border-bottom:1px solid #e4e9f1;text-align:left}.v36-table th{color:#53647a}.v36-scroll{overflow-x:auto}.v36-bar{height:11px;background:#e7edf5;border-radius:12px;overflow:hidden}.v36-bar>span{display:block;height:100%;background:#173b73}.v36-muted{font-size:13px;color:#596b82}
+@media(max-width:700px){.v36-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.v36-report-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>🥋 TKD Manager</h1><small>私人跆拳道班行政管理系統 · V3.6 Complete · 獨立測試版</small></header>
+<main>
+<section id="setup" class="panel" hidden><h2>網站尚未完成設定</h2><p>請先設定獨立 V3.6 Supabase 專案：複製 config.example.js 成 config.js，填入 URL、publishable key 與 V3.6 管理員 UID。切勿填入 V3.5B 或 V2 專案。</p></section>
+<section id="login" class="panel" hidden>
+<h2>管理員登入</h2><p class="muted">只供已獲授權管理員使用</p>
+<form id="loginForm"><label for="email">電郵地址</label><input id="email" type="email" autocomplete="username" required><label for="password">密碼</label><input id="password" type="password" autocomplete="current-password" required><p><button id="loginButton" type="submit">登入</button></p></form>
+<p id="loginMessage" class="message" role="status" aria-live="polite"></p><p class="muted">如出現網絡錯誤，請先確認 Safari 可連接 Supabase；請勿將密碼或金鑰傳送給任何人。</p>
+</section>
+<section id="app" hidden>
+<nav class="tabbar" aria-label="管理頁面"><button id="dashboardTab" type="button" aria-selected="false">📊 教練工作台</button><button id="studentsTab" type="button" aria-selected="true">學生管理</button><button id="classesTab" type="button" aria-selected="false">班別管理</button><button id="attendanceTab" type="button" aria-selected="false">課堂點名</button><button id="makeupTab" type="button" aria-selected="false">請假補堂</button><button id="tuitionTab" type="button" aria-selected="false">學費管理</button><button id="reportsTab" type="button" aria-selected="false">📈 財務報表</button></nav>
+<div id="dashboardArea" hidden>
+ <div class="panel toolbar"><div><h2>📊 教練工作台 · V3.6</h2><p class="muted">即時查閱課堂、請假、補堂及財務數字（僅測試資料）。</p></div><button class="secondary" type="button" id="dashboardRefresh">更新工作台</button></div>
+ <div class="panel"><p class="message" id="dashboardMessage" role="status"></p><div class="v36-kpis"><div class="stat"><strong id="dashStudents">—</strong><span>在讀學生</span></div><div class="stat"><strong id="dashToday">—</strong><span>今日上課班別</span></div><div class="stat"><strong id="dashLeave">—</strong><span>待批請假</span></div><div class="stat"><strong id="dashMakeups">—</strong><span>待確認補堂</span></div><div class="stat"><strong id="dashDebt">—</strong><span>尚欠學費</span></div><div class="stat"><strong id="dashPrepaid">—</strong><span>未分配收款</span></div></div></div>
+ <div class="panel"><h2>今日課堂</h2><div id="dashClassList">尚未載入。</div><div class="v36-quick"><button type="button" data-v36-nav="attendance">開始點名</button><button type="button" class="secondary" data-v36-nav="makeup">審批／補堂</button><button type="button" class="secondary" data-v36-nav="tuition">學費管理</button><button type="button" class="secondary" data-v36-nav="reports">月度報表</button></div></div>
+</div>
+<div id="studentArea">
+<div class="panel toolbar"><div><strong>學生管理</strong><div class="muted" id="who"></div></div><button class="secondary" id="logoutButton">登出</button></div>
+<div class="panel"><h2 id="formTitle">新增學生</h2>
+<form id="studentForm"><div class="row"><div><label for="studentName">學生姓名 *</label><input id="studentName" required maxlength="100"></div><div><label for="className">班別</label><input id="className" maxlength="150" placeholder="例如：寶林星期五"></div><div><label for="fee">每月學費（HK$）</label><input id="fee" type="number" min="0" step="0.01" value="0" required></div><div><label for="enrollment">入學日期</label><input id="enrollment" type="date"></div><div><label for="status">狀態</label><select id="status"><option value="active">在讀</option><option value="inactive">停讀</option></select></div></div><label for="notes">備註</label><textarea id="notes" rows="2" maxlength="1000"></textarea><p class="actions"><button type="submit" id="saveButton">儲存學生</button><button type="button" class="secondary" id="cancelButton" hidden>取消修改</button></p></form>
+<p id="studentMessage" class="message" role="status"></p><p class="muted">永久刪除只限沒有點名歷史的學生，且會一併移除該學生的班別報讀關係；已有歷史的學生請改為「停讀」。刪除需先在 V3 測試資料庫安裝管理員限定的安全函數。</p></div>
+<div class="panel" id="overview"><h2>管理總覽（學生）</h2><div class="row"><div class="stat"><strong id="totalStudents">—</strong><span>學生總數</span></div><div class="stat"><strong id="activeStudents">—</strong><span>在讀學生</span></div><div class="stat"><strong id="inactiveStudents">—</strong><span>停讀學生</span></div><div class="stat"><strong id="totalClasses">—</strong><span>已記錄班別數</span></div></div><p class="muted">以上只統計目前可讀取嘅學生資料；並非學費收入或已付款數字。</p></div>
+<div class="panel"><div class="toolbar"><h2>學生名單 <span id="count"></span></h2><div class="actions"><button id="refreshButton" class="secondary">重新整理</button><button id="exportButton" class="secondary" type="button">匯出 CSV</button></div></div><div class="row"><div><label for="searchStudents">搜尋學生或班別</label><input id="searchStudents" type="search" placeholder="輸入姓名或班別"></div><div><label for="filterStatus">篩選狀態</label><select id="filterStatus"><option value="all">全部</option><option value="active">在讀</option><option value="inactive">停讀</option></select></div></div><p id="resultCount" class="muted" role="status"></p><p id="listMessage" class="message" role="status" aria-live="polite"></p><div id="studentList">正在載入…</div></div>
+</div>
+<div id="classArea" hidden>
+<div class="panel toolbar"><div><h2>班別管理</h2><p class="muted">同一學生可報讀多班。班別標準月費不會自動改動學生的個別月費。</p></div><button id="refreshClasses" type="button" class="secondary">重新整理</button></div>
+<div class="panel"><h2 id="classFormTitle">新增班別</h2>
+<form id="classForm"><div class="row">
+<div><label for="v3ClassName">班別名稱 *</label><input id="v3ClassName" required maxlength="150" placeholder="例如：寶林星期五班"></div>
+<div><label for="v3Location">上課地點</label><input id="v3Location" maxlength="200" placeholder="例如：寶林體育館"></div>
+<div><label for="v3Day">上課星期</label><select id="v3Day"><option value="">未設定</option><option value="1">星期一</option><option value="2">星期二</option><option value="3">星期三</option><option value="4">星期四</option><option value="5">星期五</option><option value="6">星期六</option><option value="0">星期日</option></select></div>
+<div><label for="v3MonthlyFee">班別標準月費（HK$）</label><input id="v3MonthlyFee" type="number" min="0" step="0.01" value="0" required></div>
+<div><label for="v3Start">開始時間</label><input id="v3Start" type="time"></div><div><label for="v3End">結束時間</label><input id="v3End" type="time"></div>
+<div><label for="v3Active">班別狀態</label><select id="v3Active"><option value="true">開班中</option><option value="false">已暫停</option></select></div></div>
+<label for="v3Notes">備註</label><textarea id="v3Notes" rows="2" maxlength="1000"></textarea>
+<p class="actions"><button id="saveClass" type="submit">儲存班別</button><button id="cancelClass" type="button" class="secondary" hidden>取消修改</button></p></form><p id="classFormMessage" class="message" role="status"></p></div>
+<div class="panel"><h2>將學生加入班別</h2><p class="muted">此功能會建立學生與班別的報讀關係，不會重複新增學生資料。</p>
+<form id="enrollForm"><div class="row"><div><label for="enrollStudent">選擇學生</label><select id="enrollStudent" required><option value="">請選擇學生</option></select></div><div><label for="enrollClass">選擇班別</label><select id="enrollClass" required><option value="">請選擇班別</option></select></div><div><label for="enrollDate">報讀日期（選填）</label><input id="enrollDate" type="date"></div></div><p><button id="enrollButton" type="submit">確認加入班別</button></p></form><p id="enrollMessage" class="message" role="status"></p>
+<p class="muted">目前只開放加入班別；移除報讀需要另外設定經審核的 DELETE 權限，暫時不提供，以免誤刪紀錄。</p></div>
+<div class="panel" id="v361TransferPanel"><h2>🔁 V3.6.1 學生轉班（完整結構獨立測試）</h2>
+<p class="muted">只供 V3.6.1 全結構獨立測試。先預覽再確認。有學費、付款、點名、請假、補堂或多班報讀紀錄，一律拒絕直接轉班。</p>
+<div class="row"><div><label for="v361Student">測試學生</label><select id="v361Student"></select></div>
+<div><label for="v361From">原班別</label><select id="v361From"></select></div>
+<div><label for="v361To">新班別</label><select id="v361To"></select></div></div>
+<label for="v361Reason">更正原因（3–500 字）</label><textarea id="v361Reason" rows="2" maxlength="500" placeholder="例如：測試誤報班別更正"></textarea>
+<p class="actions"><button id="v361Preview" type="button" class="secondary">預覽安全檢查</button><button id="v361Commit" type="button" class="danger" disabled>確認更正測試資料</button></p>
+<p class="message" id="v361Status" role="status"></p><pre id="v361Detail" style="white-space:pre-wrap;overflow-wrap:anywhere">未預覽</pre></div>
+<div class="panel"><h2>班別名單 <span id="classCount"></span></h2><p id="classListMessage" class="message" role="status" aria-live="polite"></p><div id="classList">正在載入…</div></div>
+</div>
+<div id="attendanceArea" hidden>
+<div class="panel toolbar"><div><h2>🥋 課堂點名</h2><p class="muted">只限測試資料。先選班別及日期，再按「載入課節」。</p></div><button id="attendanceReload" type="button" class="secondary">重新載入</button></div>
+<div class="panel">
+  <div class="row">
+    <div><label for="attendanceClass">選擇班別 *</label><select id="attendanceClass"><option value="">請選擇班別</option></select></div>
+    <div><label for="attendanceDate">上課日期 *</label><input id="attendanceDate" type="date"></div>
+  </div>
+  <p><button id="attendanceLoad" type="button">載入課節</button></p>
+  <p id="attendanceMessage" class="message" role="status" aria-live="polite"></p>
+</div>
+<div class="panel" id="attendanceEditor" hidden>
+  <div class="toolbar"><div><h2 id="attendanceHeading">點名記錄</h2><p id="attendanceSessionStatus" class="muted"></p></div></div>
+  <p class="hint">全部學生預設「未點名」。未點完可以儲存草稿；全部完成後先可以提交。病假及事假嘅批准只記錄決定，<strong>今版不會自動增加補堂或扣費額度</strong>。</p>
+  <div class="attendance-stats" id="attendanceStats"></div>
+  <div id="attendanceList"></div>
+  <label for="attendanceSessionNotes">本堂備註（選填）</label><textarea id="attendanceSessionNotes" rows="2" maxlength="1000" placeholder="例如：場地調動、特別安排"></textarea>
+  <p id="attendanceSaveMessage" class="message" role="status" aria-live="polite"></p>
+  <div class="attendance-footer"><button id="attendanceDraft" class="secondary" type="button">儲存草稿</button><button id="attendanceComplete" type="button" disabled>完成點名</button></div>
+</div>
+</div>
+
+<div id="makeupArea" hidden>
+  <div class="panel toolbar"><div><h2>🗓️ 請假額度與補堂（V3.5B）</h2><p class="muted">請假由教練審批。額度可用於補堂或兩個額度抵扣半個月學費，使用後不能再重複使用。</p></div><button id="makeupRefresh" class="secondary" type="button">重新整理</button></div>
+  <div class="panel"><h2>額度總覽</h2><p id="makeupMessage" class="message" role="status" aria-live="polite"></p><div class="v33-metrics"><div class="stat"><strong id="v33Credits">—</strong><span>已批核、未使用額度</span></div><div class="stat"><strong id="v33Pending">—</strong><span>待審批請假紀錄</span></div><div class="stat"><strong id="v33Bookings">—</strong><span>待確認／已確認補堂</span></div></div><label for="v33StudentFilter">按學生篩選</label><select id="v33StudentFilter"><option value="">全部學生</option></select></div>
+  <div class="panel"><h2>請假審批</h2><p class="muted">由 V3.2 點名中嘅病假或事假產生；批准後資料庫會建立額度。取消已預約或已用額度嘅批准可能引致衝突，請先核對。</p><div id="v33Leaves">尚未載入。</div></div>
+  <div class="panel"><h2>安排補堂</h2><form id="v33BookingForm"><div class="row"><div><label for="v33Credit">選擇可用請假額度 *</label><select id="v33Credit" required><option value="">請選擇額度</option></select></div><div><label for="v33Class">補堂班別 *</label><select id="v33Class" required><option value="">請選擇班別</option></select></div><div><label for="v33Date">補堂日期 *</label><input type="date" id="v33Date" required></div><div><label for="v33Start">開始時間（選填）</label><input type="time" id="v33Start"></div><div><label for="v33End">結束時間（選填）</label><input type="time" id="v33End"></div><div><label for="v33BookingNotes">安排備註</label><textarea id="v33BookingNotes" rows="2" maxlength="1000" placeholder="例如：原班後加鐘一小時、跨班補堂、家長通知"></textarea></div></div><p><button type="submit" id="v33Create">建立待確認補堂</button></p></form><p id="v33BookingMessage" class="message" role="status" aria-live="polite"></p><p class="muted">新增只表示「待確認」；需要另行確認安排，確實補完堂後才按「完成」。</p></div>
+  <div class="panel"><h2>補堂預約及紀錄</h2><div id="v33BookingList">尚未載入。</div></div>
+</div>
+
+<div id="tuitionArea" hidden>
+  <div class="panel toolbar"><div><h2>💰 學費管理（V3.5B）</h2><p class="muted">只限 V3 測試資料。V3.5B 新增兩個合資格請假額度抵扣半個月學費；保留 V3.5A 撤銷、退款及作廢紀錄。</p></div><button type="button" id="feeRefresh" class="secondary">重新載入學費資料</button></div>
+  <div class="panel"><p id="feeMessage" class="message" role="status" aria-live="polite"></p><div class="fee-summary"><div class="stat"><strong id="feeTotalDue">—</strong><span>帳單應收總額（HK$）</span></div><div class="stat"><strong id="feeOutstanding">—</strong><span>尚欠帳單金額（HK$）</span></div><div class="stat"><strong id="feeUnallocated">—</strong><span>未分配收款（HK$）</span></div></div><label for="feeStudentFilter">篩選學生</label><select id="feeStudentFilter"><option value="">全部學生</option></select><p class="fee-small">以上統計目前已建立嘅帳單及收款資料，並非所有應收月份都已自動開單。</p></div>
+  <div class="panel"><h2>1. 個別學生／班別月費</h2><p class="fee-panel-help">先於班別管理建立報讀關係，再為該學生設定每班月費。儲存設定唔會自動改動舊帳單。</p>
+    <form id="feeSettingForm"><div class="row"><div><label for="feeSettingEnrollment">學生及報讀班別 *</label><select id="feeSettingEnrollment" required><option value="">請選擇</option></select></div><div><label for="feeSettingAmount">每月收費 HK$ *</label><input id="feeSettingAmount" type="number" min="0" step="0.01" required></div></div><label for="feeSettingNotes">收費備註</label><textarea id="feeSettingNotes" rows="2" maxlength="1000"></textarea><p><button id="feeSettingSave" type="submit">儲存個別月費</button></p></form><p id="feeSettingMessage" class="message" role="status"></p><div id="feeSettingsList"></div>
+  </div>
+  <div class="panel"><h2>2. 建立每月學費帳單</h2><p class="fee-panel-help">每位學生每班每月只能建立一張帳單。月份請選該月 1 號；同月已有帳單會阻止重複開立。</p>
+    <form id="feeInvoiceForm"><div class="row"><div><label for="feeInvoiceEnrollment">學生及班別 *</label><select id="feeInvoiceEnrollment" required><option value="">請選擇</option></select></div><div><label for="feeInvoiceMonth">帳單月份 *</label><input id="feeInvoiceMonth" type="month" required></div><div><label for="feeInvoiceAmount">應收金額 HK$ *</label><input id="feeInvoiceAmount" type="number" min="0" step="0.01" required></div></div><label for="feeInvoiceNotes">帳單備註（選填）</label><textarea id="feeInvoiceNotes" rows="2" maxlength="1000"></textarea><p><button type="submit" id="feeInvoiceCreate">建立帳單</button></p></form><p id="feeInvoiceMessage" class="message" role="status"></p>
+  </div>
+  <div class="panel"><h2>3. 記錄收到嘅學費</h2><p class="fee-panel-help">付款日期係實際收到款項日期。可以記錄部分付款、一次過預繳多個月；分配月份喺第 4 部分操作。</p>
+    <form id="feePaymentForm"><div class="row"><div><label for="feePaymentStudent">學生 *</label><select id="feePaymentStudent" required><option value="">請選擇</option></select></div><div><label for="feePaymentDate">實際付款日期 *</label><input id="feePaymentDate" type="date" required></div><div><label for="feePaymentAmount">收到金額 HK$ *</label><input id="feePaymentAmount" type="number" min="0.01" step="0.01" required></div><div><label for="feePaymentMethod">付款方式 *</label><select id="feePaymentMethod" required><option value="cash">現金</option><option value="fps">FPS</option><option value="payme">PayMe</option><option value="bank_transfer">銀行轉帳</option><option value="other">其他</option></select></div><div><label for="feePaymentReference">交易編號（選填）</label><input id="feePaymentReference" maxlength="150"></div></div><label for="feePaymentNotes">付款備註（選填）</label><textarea id="feePaymentNotes" rows="2" maxlength="1000"></textarea><p><button type="submit" id="feePaymentCreate">記錄收款</button></p></form><p id="feePaymentMessage" class="message" role="status"></p>
+  </div>
+  <div class="panel"><h2>4. 將收款分配至月份</h2><p class="fee-panel-help">先揀一筆有未分配餘額嘅收款，再揀<strong>同一學生</strong>尚未付清嘅帳單；一筆付款可分配多個月。每次操作都會獨立儲存。</p>
+    <form id="feeAllocationForm"><div class="row"><div><label for="feeAllocationPayment">選擇收款 *</label><select id="feeAllocationPayment" required><option value="">請先選擇收款</option></select></div><div><label for="feeAllocationInvoice">分配到帳單 *</label><select id="feeAllocationInvoice" required><option value="">請先選收款</option></select></div><div><label for="feeAllocationAmount">分配金額 HK$ *</label><input id="feeAllocationAmount" type="number" min="0.01" step="0.01" required></div></div><p class="fee-small" id="feeAllocationHint">請選收款及帳單。</p><p><button type="submit" id="feeAllocationSave">確認分配</button></p></form><p id="feeAllocationMessage" class="message" role="status"></p>
+  </div>
+
+  <div class="panel" id="feeDiscountPanel">
+    <h2>5. 請假額度抵扣學費（V3.5B）</h2>
+    <p class="fee-panel-help">教練選擇一張尚有足夠欠款嘅帳單，同一學生兩個已批准、未使用、未被補堂預約佔用嘅額度。每次抵扣帳單原有應收學費嘅 50%。額度永久有效，但使用後不能再補堂。必須再次確認。</p>
+    <form id="feeDiscountForm">
+      <label for="feeDiscountInvoice">選擇學費帳單 *</label>
+      <select id="feeDiscountInvoice" required><option value="">先選擇學生帳單</option></select>
+      <div class="row">
+        <div><label for="feeDiscountCredit1">第一個合資格請假額度 *</label><select id="feeDiscountCredit1" required><option value="">先選擇帳單</option></select></div>
+        <div><label for="feeDiscountCredit2">第二個合資格請假額度 *</label><select id="feeDiscountCredit2" required><option value="">先選擇帳單</option></select></div>
+      </div>
+      <label for="feeDiscountNotes">扣費原因／備註（選填）</label>
+      <textarea id="feeDiscountNotes" rows="2" maxlength="500" placeholder="例如：家長同意使用兩個已批准請假額度抵扣 11 月學費"></textarea>
+      <p class="fee-small" id="feeDiscountPreview">請先選擇一張帳單，系統會預覽抵扣金額。</p>
+      <p><button type="submit" id="feeDiscountSave" class="danger">確認使用兩個額度抵扣學費</button></p>
+    </form>
+    <p id="feeDiscountMessage" class="message" role="status" aria-live="polite"></p>
+    <h3>學費抵扣歷史</h3>
+    <div id="feeDiscountHistory">尚未載入。</div>
+  </div>
+  <div class="panel" id="feeCorrectionsPanel">
+    <h2>6. 財務安全更正（V3.5A）</h2>
+    <p class="hint">只限測試資料。所有操作必須輸入原因、再次確認，並由 Supabase 管理員安全函數執行。撤銷分配會令原本帳單恢復欠款；退款只能退回尚未分配的金額；作廢前必須先撤銷分配，且該收款不能已有退款。</p>
+    <div class="row">
+      <form id="feeReverseForm" class="fee-safe-form">
+        <h3>撤銷付款分配</h3>
+        <label for="feeReverseAllocation">選擇一筆有效分配 *</label>
+        <select id="feeReverseAllocation" required><option value="">請選擇</option></select>
+        <label for="feeReverseReason">撤銷原因 *</label>
+        <textarea id="feeReverseReason" rows="2" maxlength="500" required placeholder="例如：款項分配到錯誤月份"></textarea>
+        <p><button type="submit" id="feeReverseSave" class="danger">確認撤銷分配</button></p>
+        <p class="message" id="feeReverseMessage" role="status"></p>
+      </form>
+      <form id="feeRefundForm" class="fee-safe-form">
+        <h3>退回未分配收款</h3>
+        <label for="feeRefundPayment">選擇可退款收款 *</label>
+        <select id="feeRefundPayment" required><option value="">請選擇</option></select>
+        <label for="feeRefundAmount">退款金額 HK$ *</label>
+        <input id="feeRefundAmount" type="number" min="0.01" step="0.01" required>
+        <label for="feeRefundDate">實際退款日期 *</label>
+        <input id="feeRefundDate" type="date" required>
+        <label for="feeRefundMethod">退款方式 *</label>
+        <select id="feeRefundMethod"><option value="cash">現金</option><option value="fps">FPS</option><option value="payme">PayMe</option><option value="bank_transfer">銀行轉帳</option><option value="other">其他</option></select>
+        <label for="feeRefundReference">已完成退款之交易／收據編號 *</label><input id="feeRefundReference" maxlength="150" required placeholder="請核實真實退款後填寫參考編號"><p class="fee-small">此功能只記錄已實際完成退款，唔會自動轉帳或退錢。</p><label for="feeRefundReason">退款原因 *</label>
+        <textarea id="feeRefundReason" rows="2" maxlength="500" required placeholder="例如：退回未使用預繳學費"></textarea>
+        <p class="fee-small" id="feeRefundHint">請先選擇收款。</p>
+        <p><button type="submit" id="feeRefundSave" class="danger">確認記錄退款</button></p>
+        <p class="message" id="feeRefundMessage" role="status"></p>
+      </form>
+    </div>
+    <form id="feeVoidForm" class="fee-safe-form">
+      <h3>作廢錯誤收款</h3>
+      <p class="fee-small">作廢只適用於冇有效付款分配、亦冇退款記錄的收款。若已分配，先撤銷每筆分配。</p>
+      <label for="feeVoidPayment">選擇可作廢收款 *</label>
+      <select id="feeVoidPayment" required><option value="">請選擇</option></select>
+      <label for="feeVoidReason">作廢原因 *</label>
+      <textarea id="feeVoidReason" rows="2" maxlength="500" required placeholder="例如：測試誤輸入收款金額"></textarea>
+      <p><button type="submit" id="feeVoidSave" class="danger">確認作廢收款</button></p>
+      <p class="message" id="feeVoidMessage" role="status"></p>
+    </form>
+  </div>
+  <div class="panel">
+    <h2>7. 更正與退款審計紀錄</h2>
+    <p class="muted">保留原始收款／分配紀錄並顯示已撤銷、已退款、已作廢記錄；可按學生篩選。</p>
+    <div id="feeAuditList">尚未載入。</div>
+  </div>
+  <div class="panel" id="v36BulkPanel"><h2>V3.6 · 批量建立月費帳單</h2><p class="fee-panel-help">按指定月份預覽在讀學生及目前有效報讀班別。已存在帳單不會重複建立，原始帳單金額不會被覆寫。只限獨立 V3.6 測試專案。</p><div class="row"><div><label for="v36BulkMonth">帳單月份</label><input type="month" id="v36BulkMonth"></div><div><span class="v36-muted">本次預計新增</span><div class="stat"><strong id="v36BulkCount">—</strong><span>張帳單</span></div></div></div><div id="v36BulkList" class="fee-small"></div><p><button type="button" id="v36BulkGo" class="danger" disabled>確認批量開單</button></p><p id="v36BulkMessage" class="message" role="status"></p></div>
+  <div class="panel"><h2>帳單及付款進度</h2><div id="feeInvoicesList">尚未載入。</div></div>
+  <div class="panel"><h2>收款及預繳餘額</h2><div id="feePaymentsList">尚未載入。</div></div>
+  <div class="panel"><p class="muted">V3.5A 支援撤銷整筆付款分配、退回未分配款，以及作廢無未撤銷分配或退款的錯誤收款；原始紀錄會保留。V3.6 如已執行對應資料庫遷移，可重新分配已撤銷的付款／帳單配對。請假抵扣已於 V3.5B 啟用，所有操作只限 V3 測試資料。</p></div>
+</div>
+<div id="reportsArea" hidden>
+ <div class="panel toolbar"><div><h2>📈 V3.6 學費及收款報表</h2><p class="muted">以已儲存紀錄計算。收款總額係實際收款，已退款及已作廢分開列示；所有資料只來自 V3.6 測試專案。</p></div><button class="secondary" type="button" id="v36ReportRefresh">更新報表</button></div>
+ <div class="panel"><p id="v36ReportMessage" class="message" role="status"></p><div class="row"><div><label for="v36ReportMonth">統計月份（收款日期／帳單月份）</label><input type="month" id="v36ReportMonth"></div><div><label for="v36ReportStudent">學生</label><select id="v36ReportStudent"><option value="">全部學生</option></select></div></div><div class="v36-report-grid" style="margin-top:14px"><div class="stat"><strong id="v36RDue">—</strong><span>當月帳單原應收</span></div><div class="stat"><strong id="v36RDebt">—</strong><span>該月帳單尚欠</span></div><div class="stat"><strong id="v36RReceived">—</strong><span>當月實收（扣退款及作廢）</span></div><div class="stat"><strong id="v36RDiscount">—</strong><span>該月帳單請假折扣</span></div><div class="stat"><strong id="v36RUnassigned">—</strong><span>目前未分配預繳</span></div><div class="stat"><strong id="v36RCount">—</strong><span>當月帳單數</span></div></div><p class="v36-muted">收款按實際付款日期計；帳單按帳單月份計，兩組數字唔應直接當成同月利潤。退款按退款日期扣除；已作廢嘅原收款不計入實收。</p></div>
+ <div class="panel"><h2>帳單欠費清單</h2><div class="v36-quick"><button id="v36ExportDebts" type="button" class="secondary">匯出欠費 CSV</button><button id="v36ExportPayments" type="button" class="secondary">匯出收款 CSV</button><button id="v36ExportInvoices" type="button" class="secondary">匯出帳單 CSV</button></div><p class="v36-muted">CSV 含學生及財務資料，請勿傳到公開群組。請在可信設備保存。</p><div id="v36ReportDebts" class="v36-scroll">尚未載入。</div></div>
+</div>
+</section>
+</main>
+<script src="./config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0"></script>
+<script>
+// 只填入 Project URL 及 Publishable key（或舊版 anon key）。
+// 絕對不要填入 service_role、sb_secret 或資料庫密碼。
+const SUPABASE_URL = window.TKD_CONFIG?.url || '';
+const SUPABASE_PUBLISHABLE_KEY = window.TKD_CONFIG?.key || '';
+const ADMIN_UID = window.TKD_CONFIG?.adminUid || '';
+// V3.6.1 FULL INTEGRATION TEST: never reuse the earlier 8-table test project.
+const V361_MINI_TEST_URL='https://dvuhzbhpahkhhvyxbgfc.supabase.co';
+
+const REQUEST_TIMEOUT_MS = 20000;
+const $ = id => document.getElementById(id);
+const timeout = (promise, ms=REQUEST_TIMEOUT_MS) => Promise.race([
+ Promise.resolve(promise), new Promise((_,reject)=>setTimeout(()=>reject(new Error('連線逾時，請檢查網絡後重新整理確認結果。')),ms))
+]);
+const errorText = err => /fetch|network|load failed|網絡|連線|timeout|逾時/i.test(String(err?.message||err))
+ ? '網絡連線失敗或逾時。請檢查網絡後重試。' : String(err?.message||err);
+let loadingStudents=false, savingStudent=false, deletingStudent=false, signingIn=false;
+
+const configured = /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(SUPABASE_URL) &&
+  SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_') && SUPABASE_PUBLISHABLE_KEY.length > 25 &&
+  ADMIN_UID === '2dabf304-fb41-469f-9599-a6c965192728' && SUPABASE_URL !== V361_MINI_TEST_URL && SUPABASE_URL !== 'https://kmqddfelcrfprbanckwp.supabase.co' && SUPABASE_URL !== 'https://ozfpjdpwftdcmkvjwnhf.supabase.co' && ADMIN_UID !== '9b4ad845-9491-4c30-84b4-be0db7d2a103';
+let db, currentUser = null, students = [], editingId = null;
+const show = id => { for (const name of ['setup','login','app']) $(name).hidden = name !== id; };
+const say = (id, text, ok=false) => { $(id).textContent=text; $(id).className=ok?'message ok':'message'; };
+function resetForm(){ editingId=null; $('studentForm').reset(); $('fee').value='0'; $('formTitle').textContent='新增學生'; $('cancelButton').hidden=true; }
+function displayStudents(){
+ const list=$('studentList'); list.replaceChildren(); $('count').textContent=`(${students.length})`;
+ const q=$('searchStudents').value.trim().toLocaleLowerCase('zh-Hant');
+ const f=$('filterStatus').value;
+ const filtered=students.filter(s=>(f==='all'||s.status===f)&&(!q||(s.student_name||'').toLocaleLowerCase('zh-Hant').includes(q)||(s.class_name||'').toLocaleLowerCase('zh-Hant').includes(q)));
+ $('resultCount').textContent=`顯示 ${filtered.length} 位／共 ${students.length} 位學生`;
+ $('totalStudents').textContent=students.length;
+ $('activeStudents').textContent=students.filter(s=>s.status==='active').length;
+ $('inactiveStudents').textContent=students.filter(s=>s.status==='inactive').length;
+ $('totalClasses').textContent=new Set(students.map(s=>(s.class_name||'').trim()).filter(Boolean)).size;
+ if(!filtered.length){const p=document.createElement('p');p.className='muted';p.textContent=students.length?'沒有符合搜尋條件的學生。':'暫時未有可讀取的學生資料。';list.append(p);return;}
+ for(const s of filtered){
+  const wrap=document.createElement('div');wrap.className='student';
+  const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=s.student_name;
+  const detail=document.createElement('small');detail.textContent=`${s.class_name||'未指定班別'} · HK$${Number(s.monthly_fee).toFixed(2)} · ${s.status==='active'?'在讀':'停讀'}`;
+  info.append(strong,document.createElement('br'),detail);
+  const actions=document.createElement('div');actions.className='actions';
+  const edit=document.createElement('button');edit.className='secondary';edit.textContent='修改';edit.onclick=()=>{
+   editingId=s.id;$('studentName').value=s.student_name;$('className').value=s.class_name||'';$('fee').value=s.monthly_fee;$('enrollment').value=s.enrollment_date||'';$('status').value=s.status;$('notes').value=s.notes||'';$('formTitle').textContent='修改學生';$('cancelButton').hidden=false;window.scrollTo({top:0,behavior:'smooth'});
+  };
+  const del=document.createElement('button');del.type='button';del.className='danger';del.textContent='刪除';del.disabled=deletingStudent;
+  del.title='僅可永久刪除沒有點名歷史的學生';
+  del.addEventListener('click',()=>deleteStudentSafely(s));
+  actions.append(edit,del);wrap.append(info,actions);list.append(wrap);
+ }
+}
+async function deleteStudentSafely(student){
+ if(!currentUser||deletingStudent||savingStudent)return;
+ // The SQL RPC additionally checks admin UID, existing attendance, and FK integrity.
+ const name=student.student_name;
+ if(!window.confirm('你確定要永久刪除「'+name+'」？\n\n此操作會移除該學生的報讀關係，無法還原。\n如已有點名歷史，系統會拒絕刪除，請改為「停讀」。'))return;
+ const typed=window.prompt('為防止誤刪，請輸入學生完整姓名確認：'+name);
+ if(typed!==name){say('studentMessage','姓名不一致；已取消永久刪除。');return;}
+ deletingStudent=true;
+ say('studentMessage','正在核對刪除條件…');
+ try{
+   const {data,error}=await timeout(db.rpc('tkd_delete_student_safely',{p_student_id:student.id}));
+   if(error)throw error;
+   if(data!==true)throw new Error('未能確認刪除結果。');
+   if(editingId===student.id)resetForm();
+   say('studentMessage','已永久刪除「'+name+'」及其報讀關係。',true);
+   await loadStudents();
+   $('refreshClasses').click();
+ }catch(err){
+   const msg=String(err?.message||err);
+   const friendly=/PGRST202|Could not find the function/i.test(msg)?'尚未安裝 V3 安全刪除 SQL。請先執行隨附的 SQL 檔案。':
+     /student_has_attendance_history/.test(msg)?'學生已有點名紀錄，不可永久刪除。請修改學生狀態為「停讀」，保留歷史。':
+     /student_not_found/.test(msg)?'找不到該學生，可能已刪除；請重新整理名單。':
+     /not_authorized/.test(msg)?'目前帳戶無權執行刪除。':
+     '未能確認刪除結果：'+errorText(err)+'。請先重新整理學生名單核對。';
+   say('studentMessage',friendly);
+ }finally{deletingStudent=false;displayStudents();}
+}
+async function loadStudents(){
+ if(loadingStudents || !currentUser) return;
+ loadingStudents=true; $('refreshButton').disabled=true; $('exportButton').disabled=true;
+ $('studentList').textContent='正在載入…';
+ try {
+  const all=[]; const pageSize=500;
+  for(let offset=0;;offset+=pageSize){
+   const {data,error}=await timeout(db.from('students').select('id,student_name,class_name,monthly_fee,enrollment_date,status,notes').order('student_name').order('id').range(offset,offset+pageSize-1));
+   if(error) throw error;
+   all.push(...(data||[]));
+   if(!data || data.length<pageSize) break;
+  }
+  students=all; displayStudents(); if(typeof updateEnrollmentOptions==='function')updateEnrollmentOptions(); if(typeof classesLoaded!=='undefined' && classesLoaded && typeof displayClasses==='function')displayClasses(); say('listMessage','資料已更新。',true);
+ } catch(err){
+  // Never export stale or partial data after a failed refresh.
+  students=[]; ['count','totalStudents','activeStudents','inactiveStudents','totalClasses','resultCount'].forEach(id=>$(id).textContent='—');
+  $('studentList').textContent='讀取失敗：'+errorText(err);
+  say('listMessage','資料未完整載入，已暫停 CSV 匯出。');
+ } finally {loadingStudents=false;$('refreshButton').disabled=false;$('exportButton').disabled=students.length===0;}
+}
+async function refreshAuth(){
+ const {data,error}=await timeout(db.auth.getUser());
+ if(error || !data?.user){
+  currentUser=null;
+  students=[];
+  show('login');
+
+  const missingSession =
+    error?.name === 'AuthSessionMissingError' ||
+    /auth session missing/i.test(error?.message || '');
+
+  if(error && !missingSession){
+    say('loginMessage','無法驗證登入狀態：'+errorText(error));
+  } else {
+    say('loginMessage','');
+  }
+  return;
+}
+ if(data.user.id!==ADMIN_UID){
+  currentUser=null;students=[];show('login');say('loginMessage','此帳戶未獲管理員授權，請使用指定管理員帳戶。');
+  await timeout(db.auth.signOut()).catch(()=>{}); return;
+ }
+ currentUser=data.user;$('who').textContent=currentUser.email||'已登入';show('app');await loadStudents();await loadClasses();
+}
+if(!configured){show('setup');}
+else if(!window.supabase){show('setup');$('setup').querySelector('p').textContent='無法載入 Supabase 程式庫，請檢查網絡後重新整理。';}
+else{
+ db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+// This test is informational only. A 401/403 is a server response, not a network failure.
+// Avoid calling this on every page load: browser/CORS behaviour may mislead diagnostics.
+async function testConnection() {
+  try {
+    const response = await fetch(SUPABASE_URL + '/auth/v1/health', {
+      method: 'GET', cache: 'no-store',
+      headers: { apikey: SUPABASE_PUBLISHABLE_KEY }
+    });
+    return 'Supabase 已回應（HTTP ' + response.status + '）。';
+  } catch (_) {
+    return '瀏覽器無法連接 Supabase。請檢查網絡、VPN、內容阻擋器或 Safari 設定。';
+  }
+}
+async function startApp() {
+  show('login');
+  try { await refreshAuth(); }
+  catch (_) { show('login'); say('loginMessage', '無法檢查登入狀態，請檢查網絡連線後重試。'); }
+}
+startApp();
+ db.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){currentUser=null;students=[];classes=[];enrollments=[];classesLoaded=false;resetForm();resetClassForm();clearAttendanceView();clearMakeupState();clearTuitionState();show('login');}});
+ $('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(signingIn)return;signingIn=true;$('loginButton').disabled=true;say('loginMessage','正在登入…');
+  try {
+    const {data,error}=await timeout(db.auth.signInWithPassword({
+      email:$('email').value.trim(),password:$('password').value
+    }));
+    if(error) {
+      const network = /load failed|failed to fetch|network|fetch failed/i.test(error.message || '');
+      say('loginMessage', network
+        ? '無法連接登入服務。請檢查 Safari 網絡、VPN、內容阻擋器，再重試。'
+        : '登入失敗：' + error.message);
+      return;
+    }
+    if(!data?.user) { say('loginMessage','未收到有效登入結果，請重試。'); return; }
+    $('password').value='';
+    say('loginMessage','');
+    await refreshAuth();
+  } catch (_) {
+    say('loginMessage','登入請求失敗（網絡或瀏覽器問題）。請檢查連線後重試。');
+  } finally {
+    $('loginButton').disabled=false;signingIn=false;
+  }
+ });
+ $('logoutButton').addEventListener('click',async()=>{try{const {error}=await timeout(db.auth.signOut());if(error)throw error;currentUser=null;students=[];classes=[];enrollments=[];classesLoaded=false;resetForm();resetClassForm();clearAttendanceView();clearMakeupState();clearTuitionState();show('login');}catch(err){alert('登出失敗：'+errorText(err));}});
+ $('refreshButton').addEventListener('click',loadStudents);
+ $('searchStudents').addEventListener('input',displayStudents);
+ $('filterStatus').addEventListener('change',displayStudents);
+ $('exportButton').addEventListener('click',()=>{
+   if(!currentUser){alert('請先登入');return;}
+   if(loadingStudents||!students.length){alert('資料尚未完整載入，請重新整理後再匯出。');return;}
+   // CSV escapes spreadsheet formula injection and commas/quotes/newlines.
+   const cell=v=>{const raw=String(v??'');const safe=/^[\s\u0000-\u001f]*[=+@-]/.test(raw)?"'"+raw:raw;return '"'+safe.replace(/"/g,'""')+'"';};
+   const rows=[['姓名','班別','每月學費 (HKD)','入學日期','狀態','備註'],...students.map(s=>[s.student_name,s.class_name,s.monthly_fee,s.enrollment_date,s.status==='active'?'在讀':'停讀',s.notes])];
+   const csv='\uFEFF'+rows.map(r=>r.map(cell).join(',')).join('\r\n');
+   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+   const link=document.createElement('a');link.href=url;link.download='tkd-students-'+new Date().toISOString().slice(0,10)+'.csv';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+ });
+ // V3 class management: only inside authenticated app scope.
+ let classes=[], enrollments=[], editingClassId=null, loadingClasses=false, classesLoaded=false, savingClass=false, savingEnrollment=false;
+ const weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+ const classFields='id,class_name,location,day_of_week,start_time,end_time,standard_monthly_fee,is_active,notes';
+ const resetClassForm=()=>{editingClassId=null;$('classForm').reset();$('v3MonthlyFee').value='0';$('classFormTitle').textContent='新增班別';$('cancelClass').hidden=true;};
+ const option=(value,label)=>{const e=document.createElement('option');e.value=value;e.textContent=label;return e;};
+ function updateEnrollmentOptions(){
+   const student=$('enrollStudent'),cls=$('enrollClass'),oldStudent=student.value,oldClass=cls.value;
+   student.replaceChildren(option('','請選擇學生'));
+   for(const s of students)student.append(option(s.id,s.student_name));
+   cls.replaceChildren(option('','請選擇班別'));
+   for(const c of classes)cls.append(option(c.id,c.class_name));
+   if(students.some(s=>s.id===oldStudent))student.value=oldStudent;
+   if(classes.some(c=>c.id===oldClass))cls.value=oldClass;
+ }
+ function displayClasses(){
+   const list=$('classList');list.replaceChildren();
+   if(!classesLoaded){$('classCount').textContent='';list.textContent='班別資料正在載入，請稍候…';return;}
+   $('classCount').textContent=`(${classes.length})`;
+   if(!classes.length){const p=document.createElement('p');p.className='muted';p.textContent='未有班別。你可以用上方表單建立第一個班別。';list.append(p);return;}
+   for(const c of classes){
+     const container=document.createElement('div');container.className='class-entry';
+     const title=document.createElement('strong');title.textContent=c.class_name;
+     const details=document.createElement('p');details.className='muted';
+     const weekday=c.day_of_week===null?'未設定星期':weekdays[c.day_of_week];
+     const times=c.start_time&&c.end_time?`${String(c.start_time).slice(0,5)}–${String(c.end_time).slice(0,5)}`:'時間未設定';
+     details.textContent=`${c.location||'地點未設定'} · ${weekday} · ${times} · 標準月費 HK$${Number(c.standard_monthly_fee||0).toFixed(2)} · ${c.is_active?'開班中':'已暫停'}`;
+     const roster=document.createElement('p');roster.className='muted';
+     const linked=enrollments.filter(e=>e.class_id===c.id && !e.left_on);
+     const names=linked.map(e=>students.find(s=>s.id===e.student_id)?.student_name||'學生資料未載入');
+     roster.textContent=`學生 ${linked.length} 位：${names.join('、')||'暫未有學生'}`;
+     const edit=document.createElement('button');edit.type='button';edit.className='secondary small-button';edit.textContent='修改班別';
+     edit.addEventListener('click',()=>{
+       editingClassId=c.id;$('v3ClassName').value=c.class_name;$('v3Location').value=c.location||'';
+       $('v3Day').value=c.day_of_week===null?'':String(c.day_of_week);
+       $('v3Start').value=c.start_time?String(c.start_time).slice(0,5):'';
+       $('v3End').value=c.end_time?String(c.end_time).slice(0,5):'';
+       $('v3MonthlyFee').value=c.standard_monthly_fee??0;$('v3Active').value=String(c.is_active);
+       $('v3Notes').value=c.notes||'';$('classFormTitle').textContent='修改班別';$('cancelClass').hidden=false;
+       say('classFormMessage','');$('classForm').scrollIntoView({behavior:'smooth',block:'start'});
+     });
+     container.append(title,details,roster,edit);list.append(container);
+   }
+ }
+ async function fetchAll(table,fields){
+   const all=[],size=500;
+   for(let offset=0;;offset+=size){
+     const {data,error}=await timeout(db.from(table).select(fields).order('id').range(offset,offset+size-1));
+     if(error)throw error;all.push(...(data||[]));if(!data||data.length<size)break;
+   }return all;
+ }
+ async function loadClasses(){
+   if(loadingClasses||!currentUser)return;
+   loadingClasses=true;$('refreshClasses').disabled=true;$('enrollButton').disabled=true;
+   if(!classesLoaded){$('classList').textContent='班別資料正在載入，請稍候…';$('classCount').textContent='';}
+   say('classListMessage','正在讀取班別…');
+   try{
+     const newClasses=await fetchAll('classes',classFields);
+     const newEnrollments=await fetchAll('student_classes','id,student_id,class_id,joined_on,left_on');
+     classes=newClasses;enrollments=newEnrollments;classesLoaded=true;updateEnrollmentOptions();v361Populate();updateAttendanceClassOptions();displayClasses();say('classListMessage','班別及報讀資料已更新。',true);
+   }catch(err){
+     // Keep the last successful roster; a transient failure must not look like deleted data.
+     if(!classesLoaded){$('classList').textContent='班別載入失敗，並不代表資料已刪除。請按「重新整理」重試。';$('classCount').textContent='—';}
+     say('classListMessage','班別讀取失敗：'+errorText(err)+'。請按「重新整理」重試；原有紀錄不會因讀取失敗而刪除。');
+   }
+   finally{loadingClasses=false;$('refreshClasses').disabled=false;$('enrollButton').disabled=false;}
+ }
+ function switchTab(name){
+   if(!confirmDiscardAttendance())return;
+   const areaIds = {
+     dashboard:'dashboardArea',
+     students:'studentArea',
+     classes:'classArea',
+     attendance:'attendanceArea',
+     makeup:'makeupArea',
+     tuition:'tuitionArea',
+     reports:'reportsArea'
+   };
+   for(const n of Object.keys(areaIds)){
+     $(areaIds[n]).hidden = n !== name;
+     $(n+'Tab').setAttribute('aria-selected',String(n === name));
+   }
+   if(name==='classes' && !classesLoaded && !loadingClasses)loadClasses();
+   if(name==='attendance')updateAttendanceClassOptions();
+   if(name==='makeup')loadMakeupData();
+   if(name==='tuition')loadTuitionData();
+   if(name==='dashboard')v36LoadDashboard();
+   if(name==='reports')v36LoadReports();
+ }
+ $('dashboardTab').addEventListener('click',()=>switchTab('dashboard'));
+ $('reportsTab').addEventListener('click',()=>switchTab('reports'));
+ $('studentsTab').addEventListener('click',()=>switchTab('students'));
+ $('classesTab').addEventListener('click',()=>switchTab('classes'));
+ $('attendanceTab').addEventListener('click',()=>switchTab('attendance'));
+ $('makeupTab').addEventListener('click',()=>switchTab('makeup'));
+ $('tuitionTab').addEventListener('click',()=>switchTab('tuition'));
+ $('refreshClasses').addEventListener('click',loadClasses);
+ $('cancelClass').addEventListener('click',()=>{resetClassForm();say('classFormMessage','');});
+ $('classForm').addEventListener('submit',async e=>{
+   e.preventDefault();if(!currentUser||savingClass)return;
+   const name=$('v3ClassName').value.trim(),start=$('v3Start').value,end=$('v3End').value,fee=Number($('v3MonthlyFee').value);
+   if(!name||!$('v3MonthlyFee').value.trim()||!Number.isFinite(fee)||fee<0){say('classFormMessage','請輸入班別名稱和有效月費。');return;}
+   if(start&&end&&start>=end){say('classFormMessage','結束時間必須遲於開始時間。');return;}
+   const payload={class_name:name,location:$('v3Location').value.trim()||null,day_of_week:$('v3Day').value===''?null:Number($('v3Day').value),start_time:start||null,end_time:end||null,standard_monthly_fee:fee,is_active:$('v3Active').value==='true',notes:$('v3Notes').value.trim()||null};
+   savingClass=true;$('saveClass').disabled=true;say('classFormMessage','正在儲存…');
+   try{
+     const query=editingClassId?db.from('classes').update(payload).eq('id',editingClassId):db.from('classes').insert(payload);
+     const {error}=await timeout(query);if(error)throw error;
+     resetClassForm();say('classFormMessage','班別已儲存。',true);await loadClasses();
+   }catch(err){say('classFormMessage','無法確認儲存結果：'+errorText(err)+' 如逾時，請先重新整理資料避免重複建立。');}
+   finally{savingClass=false;$('saveClass').disabled=false;}
+ });
+ $('enrollForm').addEventListener('submit',async e=>{
+   e.preventDefault();if(!currentUser||savingEnrollment||loadingClasses)return;
+   const studentId=$('enrollStudent').value,classId=$('enrollClass').value,joined=$('enrollDate').value||null;
+   if(!studentId||!classId){say('enrollMessage','請選擇學生和班別。');return;}
+   if(enrollments.some(x=>x.student_id===studentId&&x.class_id===classId)){
+     say('enrollMessage','此學生與班別已有報讀紀錄，請先核對，避免重複。');return;
+   }
+   savingEnrollment=true;$('enrollButton').disabled=true;say('enrollMessage','正在加入班別…');
+   try{
+     const {error}=await timeout(db.from('student_classes').insert({student_id:studentId,class_id:classId,joined_on:joined}));
+     if(error)throw error;say('enrollMessage','學生已成功加入班別。',true);await loadClasses();
+   }catch(err){say('enrollMessage','無法確認加入結果：'+errorText(err)+' 如逾時，請先重新整理名單。');}
+   finally{savingEnrollment=false;$('enrollButton').disabled=false;}
+ });
+ // V3.2 Attendance: 1 session per class/date, 1 entry per student/session.
+ // This UI enforces completion client-side. A later database-level constraint is needed
+ // if other API clients must be prevented from marking incomplete sessions completed.
+ let attendanceSession=null,attendanceRows=[],attendanceDirty=false,attendanceBusy=false;
+ let attendanceSelection=null,attendanceLoadToken=0;
+ const attendanceStatusNames={unmarked:'未點名',present:'出席',sick:'病假',personal:'事假',absent:'缺席'};
+ const attendanceApprovalNames={pending:'待確認',approved:'已批准',rejected:'不批准'};
+ function clearAttendanceView(){
+   attendanceLoadToken++;attendanceSession=null;attendanceRows=[];attendanceSelection=null;attendanceDirty=false;
+   $('attendanceEditor').hidden=true;$('attendanceList').replaceChildren();
+   say('attendanceMessage','');say('attendanceSaveMessage','');
+ }
+ function confirmDiscardAttendance(){
+   if(attendanceBusy)return false;
+   if(!attendanceDirty)return true;
+   if(!window.confirm('有未儲存嘅點名修改。確定放棄修改？'))return false;
+   attendanceDirty=false;return true;
+ }
+ function updateAttendanceClassOptions(){
+   const field=$('attendanceClass'),old=field.value;
+   field.replaceChildren(option('','請選擇班別'));
+   for(const c of classes)field.append(option(c.id,c.class_name));
+   if(classes.some(c=>c.id===old))field.value=old;
+ }
+ function attendanceOption(value,label){return option(value,label);}
+ function attendanceSetDirty(){attendanceDirty=true;updateAttendanceCounters();}
+ function updateAttendanceCounters(){
+   const pending=attendanceRows.filter(x=>x.status==='unmarked').length;
+   const counts=[['未點名',pending],['出席',attendanceRows.filter(x=>x.status==='present').length],['病假',attendanceRows.filter(x=>x.status==='sick').length],['事假',attendanceRows.filter(x=>x.status==='personal').length],['缺席',attendanceRows.filter(x=>x.status==='absent').length]];
+   $('attendanceStats').replaceChildren();
+   for(const [label,count] of counts){
+     const el=document.createElement('div');el.className='stat';
+     const strong=document.createElement('strong');strong.textContent=String(count);
+     const txt=document.createElement('span');txt.textContent=label;el.append(strong,txt);$('attendanceStats').append(el);
+   }
+   const text=attendanceSession?.status==='completed'?'上次已完成，可重新修改': '目前為草稿／未建立課節';
+   $('attendanceSessionStatus').textContent=text+(attendanceDirty?' · 有未儲存修改':'');
+   $('attendanceComplete').disabled=attendanceBusy||attendanceRows.length===0||pending>0;
+   $('attendanceDraft').disabled=attendanceBusy||attendanceRows.length===0;
+ }
+ function attendanceField(label,control){
+   const wrap=document.createElement('div'),lab=document.createElement('label');
+   lab.textContent=label;wrap.append(lab,control);return wrap;
+ }
+ function renderAttendance(){
+   const list=$('attendanceList');list.replaceChildren();
+   const cls=classes.find(c=>c.id===attendanceSelection?.classId);
+   $('attendanceHeading').textContent=(cls?.class_name||'班別')+' · '+(attendanceSelection?.date||'');
+   if(!attendanceRows.length){const p=document.createElement('p');p.className='muted';p.textContent='呢一日冇符合報讀日期嘅學生。請先喺班別管理確認學生報讀關係。';list.append(p);}
+   for(const row of attendanceRows){
+     const box=document.createElement('div');box.className='attendance-entry';
+     const h=document.createElement('h3');h.textContent=row.name;box.append(h);
+     const status=document.createElement('select');status.setAttribute('aria-label',row.name+'點名狀態');
+     for(const [v,label] of Object.entries(attendanceStatusNames))status.append(attendanceOption(v,label));
+     status.value=row.status;
+     const statusField=attendanceField('點名狀態',status);box.append(statusField);
+     const approval=document.createElement('select');approval.setAttribute('aria-label',row.name+'請假資格');
+     for(const [v,label] of Object.entries(attendanceApprovalNames))approval.append(attendanceOption(v,label));
+     approval.value=row.leave_approval||'pending';
+     const approvalField=attendanceField('請假資格（由教練確認）',approval);
+     approvalField.hidden=!['sick','personal'].includes(row.status);
+     box.append(approvalField);
+     const notes=document.createElement('textarea');notes.rows=2;notes.maxLength=1000;notes.value=row.notes||'';
+     notes.placeholder='可記錄請假通知、原因或特別情況';notes.setAttribute('aria-label',row.name+'點名備註');
+     box.append(attendanceField('備註（選填）',notes));
+     status.addEventListener('change',()=>{
+       row.status=status.value;
+       row.leave_approval=['sick','personal'].includes(row.status)?'pending':null;
+       approval.value='pending';approvalField.hidden=!['sick','personal'].includes(row.status);
+       attendanceSetDirty();
+     });
+     approval.addEventListener('change',()=>{row.leave_approval=approval.value;attendanceSetDirty();});
+     notes.addEventListener('input',()=>{row.notes=notes.value;attendanceSetDirty();});
+     list.append(box);
+   }
+   $('attendanceSessionNotes').value=attendanceSession?.notes||'';
+   $('attendanceEditor').hidden=false;
+   updateAttendanceCounters();
+ }
+ async function loadAttendance(){
+   if(!currentUser||attendanceBusy)return;
+   if(!confirmDiscardAttendance())return;
+   const classId=$('attendanceClass').value,date=$('attendanceDate').value;
+   if(!classId||!date){say('attendanceMessage','請先選班別及上課日期。');return;}
+   attendanceBusy=true;const token=++attendanceLoadToken;
+   $('attendanceLoad').disabled=true;$('attendanceReload').disabled=true;
+   $('attendanceEditor').hidden=true;say('attendanceMessage','正在載入課節…');
+   try{
+     // Fresh class enrollments and students ensure the roster matches this date.
+     const newClasses=await fetchAll('classes',classFields);
+     const newEnrollments=await fetchAll('student_classes','id,student_id,class_id,joined_on,left_on');
+     const newStudents=await fetchAll('students','id,student_name,status');
+     if(!newClasses.some(c=>c.id===classId))throw new Error('找不到所選班別。');
+     const {data:session,error:se}=await timeout(db.from('class_sessions')
+       .select('id,class_id,session_date,status,notes').eq('class_id',classId).eq('session_date',date).maybeSingle());
+     if(se)throw se;
+     let existing=[];
+     if(session){
+       const {data,error}=await timeout(db.from('attendance')
+         .select('id,student_id,status,leave_approval,notes').eq('session_id',session.id));
+       if(error)throw error;existing=data||[];
+     }
+     if(token!==attendanceLoadToken)return;
+     classes=newClasses;enrollments=newEnrollments;
+     const linked=new Set(newEnrollments.filter(x=>x.class_id===classId&&(!x.joined_on||x.joined_on<=date)&&(!x.left_on||x.left_on>=date)).map(x=>x.student_id));
+     const existingIds=new Set(existing.map(x=>x.student_id));
+     attendanceRows=newStudents.filter(s=>linked.has(s.id)||existingIds.has(s.id)).map(s=>{
+       const a=existing.find(x=>x.student_id===s.id);
+       return {student_id:s.id,name:s.student_name,status:a?.status||'unmarked',
+         leave_approval:a?.leave_approval||null,notes:a?.notes||''};
+     }).sort((a,b)=>a.name.localeCompare(b.name,'zh-Hant'));
+     attendanceSession=session||null;attendanceSelection={classId,date};attendanceDirty=false;
+     renderAttendance();
+     say('attendanceMessage',session?'已載入既有點名記錄。':'尚未建立課節；儲存草稿時會建立。',true);
+   }catch(err){clearAttendanceView();say('attendanceMessage','讀取失敗：'+errorText(err));}
+   finally{attendanceBusy=false;$('attendanceLoad').disabled=false;$('attendanceReload').disabled=false;updateAttendanceCounters();}
+ }
+ async function saveAttendance(complete){
+   if(!currentUser||attendanceBusy||!attendanceSelection)return;
+   if(!attendanceRows.length){say('attendanceSaveMessage','未有可點名學生。');return;}
+   if(complete&&attendanceRows.some(r=>r.status==='unmarked')){say('attendanceSaveMessage','仍有學生未點名，請先完成全部標記。');return;}
+   if(!window.confirm(complete?'確認全部點名完成並提交？':'確定儲存目前點名草稿？'))return;
+   attendanceBusy=true;updateAttendanceCounters();
+   say('attendanceSaveMessage','正在儲存，請勿離開頁面…');
+   try{
+     let session=attendanceSession;
+     const sessionPayload={notes:$('attendanceSessionNotes').value.trim()||null,updated_at:new Date().toISOString()};
+     if(!session){
+       const {data,error}=await timeout(db.from('class_sessions')
+         .insert({class_id:attendanceSelection.classId,session_date:attendanceSelection.date,status:'draft',...sessionPayload})
+         .select('id,class_id,session_date,status,notes').single());
+       if(error)throw error;session=data;attendanceSession=data;
+     }else{
+       // Draft before changing individual rows; a failed save must not appear completed.
+       const {error}=await timeout(db.from('class_sessions').update({...sessionPayload,status:'draft'}).eq('id',session.id));
+       if(error)throw error;attendanceSession={...session,...sessionPayload,status:'draft'};
+     }
+     // Upsert keeps the unique (session_id, student_id) pair and permits edits.
+     for(let offset=0;offset<attendanceRows.length;offset+=100){
+       const batch=attendanceRows.slice(offset,offset+100).map(r=>({
+         session_id:session.id,student_id:r.student_id,status:r.status,
+         leave_approval:['sick','personal'].includes(r.status)?(r.leave_approval||'pending'):null,
+         notes:r.notes?.trim()||null,updated_at:new Date().toISOString()
+       }));
+       const {error}=await timeout(db.from('attendance').upsert(batch,{onConflict:'session_id,student_id'}));
+       if(error)throw error;
+     }
+     if(complete){
+       const {error}=await timeout(db.from('class_sessions')
+         .update({status:'completed',updated_at:new Date().toISOString()}).eq('id',session.id));
+       if(error)throw error;
+       attendanceSession={...attendanceSession,status:'completed'};
+     }
+     attendanceDirty=false;
+     say('attendanceSaveMessage',complete?'已完成點名並儲存。':'草稿已儲存，可稍後再繼續。',true);
+   }catch(err){
+     // Some rows may have been written before a failure. Reload from DB first.
+     attendanceDirty=true;
+     say('attendanceSaveMessage','未能確認全部儲存成功：'+errorText(err)+'。請按「重新載入」核對，避免重複操作。');
+   }finally{attendanceBusy=false;updateAttendanceCounters();}
+ }
+ const localToday=new Date();$('attendanceDate').value=[localToday.getFullYear(),String(localToday.getMonth()+1).padStart(2,'0'),String(localToday.getDate()).padStart(2,'0')].join('-');
+ $('attendanceClass').addEventListener('change',()=>{if(attendanceDirty)say('attendanceMessage','班別已改變。請先儲存舊課節，或按「載入課節」並確認放棄修改。');});
+ $('attendanceDate').addEventListener('change',()=>{if(attendanceDirty)say('attendanceMessage','日期已改變。請先儲存舊課節，或按「載入課節」並確認放棄修改。');});
+ $('attendanceLoad').addEventListener('click',loadAttendance);
+ $('attendanceReload').addEventListener('click',loadAttendance);
+ $('attendanceSessionNotes').addEventListener('input',attendanceSetDirty);
+ $('attendanceDraft').addEventListener('click',()=>saveAttendance(false));
+ $('attendanceComplete').addEventListener('click',()=>saveAttendance(true));
+
+ // V3.3: leave credit balances + makeup scheduling. No client writes to credits or credit_uses.
+ let v33Leaves=[],v33Credits=[],v33Bookings=[],v33Uses=[],v33Sessions=[],v33Students=[];
+ let v33Busy=false,v33Ready=false,v33Request=0;
+ const v33State={pending:'待確認',confirmed:'已確認',completed:'已完成',cancelled:'已取消'};
+ const v33LeaveText={pending:'待審批',approved:'已批准',rejected:'不批准'};
+ function clearMakeupState(){v33Request++;v33Ready=false;v33Leaves=[];v33Credits=[];v33Bookings=[];v33Uses=[];v33Sessions=[];v33Students=[];}
+ const v33Name=id=>v33Students.find(s=>s.id===id)?.student_name||'未知學生';
+ const v33Credit=creditId=>v33Credits.find(c=>c.id===creditId);
+ const v33IsUsed=creditId=>v33Uses.some(u=>u.credit_id===creditId);
+ const v33ActiveBooking=creditId=>v33Bookings.find(b=>b.credit_id===creditId&&b.status!=='cancelled');
+ const v33ShowDate=(d)=>d||'日期未記錄';
+ function v33Line(container,title,subtitle){const wrap=document.createElement('div');wrap.className='credit-line';const h=document.createElement('p');h.className='v33-card-title';h.textContent=title;const sub=document.createElement('div');sub.className='muted';sub.textContent=subtitle;wrap.append(h,sub);container.append(wrap);return wrap;}
+ function v33SetOptions(field,opts,placeholder){const old=field.value;field.replaceChildren(option('',placeholder));for(const [v,label] of opts)field.append(option(v,label));if(opts.some(x=>x[0]===old))field.value=old;}
+ function v33Render(){
+   const f=$('v33StudentFilter').value;
+   v33SetOptions($('v33StudentFilter'),v33Students.map(s=>[s.id,s.student_name]),'全部學生');
+   if(v33Students.some(s=>s.id===f))$('v33StudentFilter').value=f;
+   const filter=$('v33StudentFilter').value;
+   const available=v33Credits.filter(c=>c.is_active&&!v33IsUsed(c.id)&&!v33ActiveBooking(c.id));
+   $('v33Credits').textContent=String(available.length);
+   $('v33Pending').textContent=String(v33Leaves.filter(a=>a.leave_approval==='pending').length);
+   $('v33Bookings').textContent=String(v33Bookings.filter(b=>['pending','confirmed'].includes(b.status)).length);
+   const sessionFor=id=>v33Sessions.find(s=>s.id===id);
+   const leaveList=$('v33Leaves');leaveList.replaceChildren();
+   const rows=v33Leaves.filter(a=>!filter||a.student_id===filter).sort((a,b)=>String(sessionFor(b.session_id)?.session_date||'').localeCompare(String(sessionFor(a.session_id)?.session_date||'')));
+   if(!rows.length)leaveList.textContent='未有病假或事假紀錄。先喺「課堂點名」將測試學生標記為病假／事假。';
+   for(const a of rows){
+     const session=sessionFor(a.session_id),cls=classes.find(c=>c.id===session?.class_id),credit=v33Credits.find(c=>c.attendance_id===a.id);
+     const booked=credit&&v33ActiveBooking(credit.id),usage=credit&&v33Uses.find(u=>u.credit_id===credit.id),used=!!usage;
+     const desc=[v33ShowDate(session?.session_date),cls?.class_name||'未知班別',a.status==='sick'?'病假':'事假',v33LeaveText[a.leave_approval]||'未定',credit?(used?(usage.use_type==='tuition'?'已抵扣學費':'已完成補堂，額度已使用'):booked?'已預約補堂':credit.is_active?'額度可用':'額度已停用'):'未產生額度'].join(' · ');
+     const wrap=v33Line(leaveList,v33Name(a.student_id),desc);
+     if(a.notes){const p=document.createElement('p');p.className='muted';p.textContent='備註：'+a.notes;wrap.append(p);}
+     const controls=document.createElement('div');controls.className='v33-actions';const select=document.createElement('select');select.setAttribute('aria-label',v33Name(a.student_id)+'請假審批');
+     for(const [value,label] of Object.entries(v33LeaveText))select.append(option(value,label));select.value=a.leave_approval||'pending';
+     // An active booking must be dealt with first; used credits are immutable.
+     const locked=!!used||!!booked;
+     select.disabled=locked||v33Busy;const btn=document.createElement('button');btn.type='button';btn.className='secondary small-button';btn.textContent='儲存審批';btn.disabled=locked||v33Busy;
+     if(locked){const note=document.createElement('span');note.className='muted';note.textContent=used?'已用額度不可撤回批准':'已有補堂預約，先處理預約';controls.append(note);}
+     controls.append(select,btn);wrap.append(controls);
+     btn.addEventListener('click',()=>v33Approve(a,select.value));
+   }
+   const usable=available.filter(c=>!filter||c.student_id===filter);
+   v33SetOptions($('v33Credit'),usable.map(c=>{
+     const a=v33Leaves.find(x=>x.id===c.attendance_id),session=sessionFor(a?.session_id);
+     return [c.id,`${v33Name(c.student_id)} · ${v33ShowDate(session?.session_date)} · ${a?.status==='sick'?'病假':'事假'}`];
+   }),'請選擇可用額度');
+   v33SetOptions($('v33Class'),classes.map(c=>[c.id,c.class_name]),'請選擇班別');
+   const bookings=$('v33BookingList');bookings.replaceChildren();
+   const ordered=v33Bookings.filter(b=>!filter||v33Credit(b.credit_id)?.student_id===filter).sort((a,b)=>b.makeup_date.localeCompare(a.makeup_date));
+   if(!ordered.length)bookings.textContent='目前未有補堂預約。';
+   for(const b of ordered){const credit=v33Credit(b.credit_id),cls=classes.find(c=>c.id===b.target_class_id);
+     const detail=[v33ShowDate(b.makeup_date),cls?.class_name||'未知班別',b.start_time?.slice(0,5)||'',b.end_time?.slice(0,5)||'',v33State[b.status]||b.status].filter(Boolean).join(' · ');
+     const wrap=v33Line(bookings,v33Name(credit?.student_id),detail);
+     if(b.notes){const p=document.createElement('p');p.className='muted';p.textContent='備註：'+b.notes;wrap.append(p);}
+     if(['pending','confirmed'].includes(b.status)){
+       const act=document.createElement('div');act.className='actions';
+       const actions=b.status==='pending'?[['confirmed','確認預約'],['cancelled','取消預約']]:[['completed','完成補堂（使用1額度）'],['cancelled','取消預約']];
+       for(const [state,label] of actions){const btn=document.createElement('button');btn.type='button';btn.className=state==='cancelled'?'secondary small-button':'small-button';btn.textContent=label;btn.disabled=v33Busy;btn.addEventListener('click',()=>v33UpdateBooking(b,state));act.append(btn);}
+       wrap.append(act);
+     }
+   }
+ }
+ async function loadMakeupData(){
+   if(!currentUser||v33Busy)return;
+   v33Busy=true;const token=++v33Request;$('makeupRefresh').disabled=true;$('v33Create').disabled=true;say('makeupMessage','正在讀取請假及補堂資料…');
+   try{
+     // Fetch all required tables first; never mix fresh and stale partial results.
+     const [leaves,credits,bookings,uses,sessions,studentList,classList]=await Promise.all([
+       fetchAll('attendance','id,session_id,student_id,status,leave_approval,notes'),
+       fetchAll('leave_credits','id,attendance_id,student_id,is_active,created_at'),
+       fetchAll('makeup_bookings','id,credit_id,target_class_id,makeup_date,start_time,end_time,status,notes'),
+       fetchAll('credit_uses','id,credit_id,makeup_booking_id,discount_id,use_type,used_at'),
+       fetchAll('class_sessions','id,class_id,session_date,status'),
+       fetchAll('students','id,student_name,status'),
+       fetchAll('classes',classFields)
+     ]);
+     if(token!==v33Request||!currentUser)return;
+     v33Leaves=leaves.filter(a=>['sick','personal'].includes(a.status));v33Credits=credits;v33Bookings=bookings;v33Uses=uses;v33Sessions=sessions;v33Students=studentList;
+     classes=classList;v33Ready=true;v33Render();say('makeupMessage','資料已更新。',true);
+   }catch(err){say('makeupMessage','讀取失敗：'+errorText(err)+'。原有資料不會因讀取失敗而刪除。');}
+   finally{v33Busy=false;$('makeupRefresh').disabled=false;$('v33Create').disabled=false;if(v33Ready)v33Render();}
+ }
+ async function v33Approve(a,next){
+   if(v33Busy||!v33Ready||!currentUser||!['pending','approved','rejected'].includes(next)||next===a.leave_approval)return;
+   const credit=v33Credits.find(c=>c.attendance_id===a.id);
+   if(credit&&(v33IsUsed(credit.id)||v33ActiveBooking(credit.id))){say('makeupMessage','額度已有使用或補堂預約，不可直接改審批。');return;}
+   if(!confirm('確認將 '+v33Name(a.student_id)+' 呢次請假設定為「'+v33LeaveText[next]+'」？'))return;
+   v33Busy=true;say('makeupMessage','正在儲存審批…');
+   try{const {error}=await timeout(db.from('attendance').update({leave_approval:next,updated_at:new Date().toISOString()}).eq('id',a.id).in('status',['sick','personal']));if(error)throw error;
+     say('makeupMessage','已提交審批；正在重新核對額度…',true);
+   }catch(err){say('makeupMessage','審批未能確認：'+errorText(err)+'。先重新整理核對，避免重複操作。');}
+   finally{v33Busy=false;await loadMakeupData();}
+ }
+ async function v33UpdateBooking(booking,state){
+   if(v33Busy||!currentUser)return;
+   if(!confirm(state==='completed'?'確認已實際完成補堂？此操作會立即使用一個請假額度，無法直接撤銷。':state==='cancelled'?'確定取消補堂預約？':'確定批准呢個補堂安排？'))return;
+   v33Busy=true;say('makeupMessage','正在更新補堂狀態…');
+   try{
+     const {data,error}=await timeout(db.from('makeup_bookings').update({status:state,updated_at:new Date().toISOString()}).eq('id',booking.id).eq('status',booking.status).select('id,status').maybeSingle());
+     if(error)throw error;
+     if(!data||data.status!==state)throw new Error('預約狀態可能已被修改；請重新整理後再試。');
+     say('makeupMessage','已提交更改，正在重新核對資料…',true);
+   }catch(err){say('makeupMessage','未能確認補堂更新：'+errorText(err)+'。先重新整理核對。');}
+   finally{v33Busy=false;await loadMakeupData();}
+ }
+ $('v33StudentFilter').addEventListener('change',()=>{if(v33Ready)v33Render();});
+ $('makeupRefresh').addEventListener('click',loadMakeupData);
+ $('v33BookingForm').addEventListener('submit',async e=>{
+   e.preventDefault();if(!currentUser||v33Busy||!v33Ready)return;
+   const creditId=$('v33Credit').value,classId=$('v33Class').value,date=$('v33Date').value,start=$('v33Start').value,end=$('v33End').value;
+   if(!creditId||!classId||!date){say('v33BookingMessage','請選擇額度、班別及日期。');return;}
+   if(start&&end&&start>=end){say('v33BookingMessage','補堂結束時間必須遲於開始時間。');return;}
+   const credit=v33Credit(creditId);
+   if(!credit?.is_active||v33IsUsed(creditId)||v33ActiveBooking(creditId)){say('v33BookingMessage','額度已使用或已有預約，請重新整理核對。');return;}
+   if(!confirm('確認為 '+v33Name(credit.student_id)+' 建立待確認補堂？暫時不扣除額度。'))return;
+   v33Busy=true;$('v33Create').disabled=true;say('v33BookingMessage','正在建立預約…');
+   try{
+     const payload={credit_id:creditId,target_class_id:classId,makeup_date:date,start_time:start||null,end_time:end||null,status:'pending',notes:$('v33BookingNotes').value.trim()||null};
+     const {error}=await timeout(db.from('makeup_bookings').insert(payload));if(error)throw error;
+     $('v33BookingForm').reset();say('v33BookingMessage','已建立待確認補堂預約。',true);
+   }catch(err){say('v33BookingMessage','未能確認新增結果：'+errorText(err)+'。如遇逾時，先重新整理核對，避免重複預約。');}
+   finally{v33Busy=false;$('v33Create').disabled=false;await loadMakeupData();}
+ });
+
+
+ // V3.4 tuition module: append-only invoices/payments/allocations. Never modify credits.
+ let feeState={settings:[],invoices:[],payments:[],allocations:[],reversals:[],refunds:[],voids:[],discounts:[],credits:[],creditUses:[],makeupBookings:[],leaves:[],sessions:[],people:[],classes:[],enrollments:[]};
+ let feeBusy=false,feeReady=false,feeRequest=0;
+ function clearTuitionState(){
+   feeRequest++;feeBusy=false;feeReady=false;
+   feeState={settings:[],invoices:[],payments:[],allocations:[],reversals:[],refunds:[],voids:[],discounts:[],credits:[],creditUses:[],makeupBookings:[],leaves:[],sessions:[],people:[],classes:[],enrollments:[]};
+   for(const id of ['feeInvoicesList','feePaymentsList','feeSettingsList','feeDiscountHistory'])$(id).replaceChildren();
+   for(const id of ['feeTotalDue','feeOutstanding','feeUnallocated'])$(id).textContent='—';
+   say('feeMessage','');
+ }
+ const feeMoney=v=>'HK$'+(Number(v)||0).toFixed(2);
+ const feeCents=v=>Math.round(Number(v)*100);
+ const feeFmt=v=>new Date(v+'T00:00:00').toLocaleDateString('zh-HK');
+ const feeName=id=>feeState.people.find(p=>p.id===id)?.student_name||'未知學生';
+ const feeClass=id=>feeState.classes.find(c=>c.id===id)?.class_name||'未知班別';
+ const feeEnrollKey=e=>e.student_id+'|'+e.class_id;
+ const feeSetting=(sid,cid)=>feeState.settings.find(x=>x.student_id===sid&&x.class_id===cid);
+ const feeIsVoid=id=>feeState.voids.some(v=>v.payment_id===id);
+ const feeIsReversed=id=>feeState.reversals.some(r=>r.allocation_id===id);
+ const feeActiveAllocations=()=>feeState.allocations.filter(a=>!feeIsReversed(a.id));
+ const feePaid=id=>feeActiveAllocations().filter(a=>a.invoice_id===id).reduce((s,a)=>s+feeCents(a.allocated_amount),0);
+ const feeAllocated=id=>feeActiveAllocations().filter(a=>a.payment_id===id).reduce((s,a)=>s+feeCents(a.allocated_amount),0);
+ const feeRefunded=id=>feeState.refunds.filter(r=>r.payment_id===id).reduce((s,r)=>s+feeCents(r.amount),0);
+ const feeAvailable=p=>feeIsVoid(p.id)?0:feeCents(p.amount)-feeAllocated(p.id)-feeRefunded(p.id);
+ const feeDiscounted=id=>feeState.discounts.filter(d=>d.invoice_id===id).reduce((sum,d)=>sum+feeCents(d.amount),0);
+ const feeBalance=i=>feeCents(i.amount_due)-feePaid(i.id)-feeDiscounted(i.id);
+ const feeOptions=(id,pairs,placeholder)=>{
+   const elem=$(id),old=elem.value;elem.replaceChildren(option('',placeholder));
+   for(const [value,label] of pairs)elem.append(option(value,label));
+   if(pairs.some(x=>x[0]===old))elem.value=old;
+ };
+ function feeEnrollmentChoices(){
+   return feeState.enrollments.filter(e=>{
+     return feeState.people.some(p=>p.id===e.student_id)&&feeState.classes.some(c=>c.id===e.class_id);
+   }).map(e=>[feeEnrollKey(e),feeName(e.student_id)+' · '+feeClass(e.class_id)]);
+ }
+ function feeSelection(key){
+   const e=feeState.enrollments.find(x=>feeEnrollKey(x)===key);
+   return e?{student_id:e.student_id,class_id:e.class_id}:null;
+ }
+ function feeRender(){
+   if(!feeReady)return;
+   const oldFilter=$('feeStudentFilter').value;
+   feeOptions('feeStudentFilter',feeState.people.map(p=>[p.id,p.student_name]),'全部學生');
+   if(feeState.people.some(x=>x.id===oldFilter))$('feeStudentFilter').value=oldFilter;
+   const filter=$('feeStudentFilter').value;
+   const invoices=feeState.invoices.filter(i=>!filter||i.student_id===filter);
+   const payments=feeState.payments.filter(p=>!filter||p.student_id===filter);
+   const due=invoices.reduce((sum,i)=>sum+feeCents(i.amount_due),0);
+   const unpaid=invoices.reduce((sum,i)=>sum+feeBalance(i),0);
+   const unassigned=payments.reduce((sum,p)=>sum+feeAvailable(p),0);
+   $('feeTotalDue').textContent=feeMoney(due/100);
+   $('feeOutstanding').textContent=feeMoney(unpaid/100);
+   $('feeUnallocated').textContent=feeMoney(unassigned/100);
+   const opts=feeEnrollmentChoices();
+   feeOptions('feeSettingEnrollment',opts,'選擇報讀學生及班別');
+   feeOptions('feeInvoiceEnrollment',opts,'選擇報讀學生及班別');
+   feeOptions('feePaymentStudent',feeState.people.map(p=>[p.id,p.student_name]),'請選擇學生');
+   const settingList=$('feeSettingsList');settingList.replaceChildren();
+   const settings=feeState.settings.filter(s=>!filter||s.student_id===filter);
+   if(!settings.length)settingList.textContent='未有個別收費設定。';
+   for(const x of settings){
+     const el=document.createElement('div');el.className='fee-row';
+     el.textContent=feeName(x.student_id)+' · '+feeClass(x.class_id)+' · '+feeMoney(x.monthly_fee);
+     settingList.append(el);
+   }
+   const invoiceList=$('feeInvoicesList');invoiceList.replaceChildren();
+   if(!invoices.length)invoiceList.textContent='目前沒有帳單。';
+   for(const i of [...invoices].sort((a,b)=>b.billing_month.localeCompare(a.billing_month))){
+     const el=document.createElement('div');el.className='fee-row';
+     const name=document.createElement('strong');name.textContent=feeName(i.student_id)+' · '+feeClass(i.class_id)+' · '+i.billing_month.slice(0,7);
+     const detail=document.createElement('p');detail.className='muted';detail.textContent='應收 '+feeMoney(i.amount_due)+' · 已分配 '+feeMoney(feePaid(i.id)/100)+' · 請假抵扣 '+feeMoney(feeDiscounted(i.id)/100)+' · 尚欠 '+feeMoney(feeBalance(i)/100);
+     el.append(name,detail);invoiceList.append(el);
+   }
+   const paymentsList=$('feePaymentsList');paymentsList.replaceChildren();
+   if(!payments.length)paymentsList.textContent='目前沒有收款紀錄。';
+   const methods={cash:'現金',fps:'FPS',payme:'PayMe',bank_transfer:'銀行轉帳',other:'其他'};
+   for(const p of [...payments].sort((a,b)=>b.payment_date.localeCompare(a.payment_date))){
+     const el=document.createElement('div');el.className='fee-row';
+     const name=document.createElement('strong');name.textContent=feeName(p.student_id)+' · '+p.payment_date+' · '+feeMoney(p.amount);
+     const detail=document.createElement('p');detail.className='muted';detail.textContent=(methods[p.payment_method]||p.payment_method)+' · 已分配 '+feeMoney(feeAllocated(p.id)/100)+' · 已退款 '+feeMoney(feeRefunded(p.id)/100)+' · 尚未分配 '+feeMoney(feeAvailable(p)/100)+(feeIsVoid(p.id)?' · 已作廢':'')+(p.reference_no?' · 編號 '+p.reference_no:'');
+     el.append(name,detail);paymentsList.append(el);
+   }
+   const paymentPairs=payments.filter(p=>feeAvailable(p)>0).map(p=>[p.id,feeName(p.student_id)+' · '+p.payment_date+' · 尚餘 '+feeMoney(feeAvailable(p)/100)]);
+   feeOptions('feeAllocationPayment',paymentPairs,'選擇尚有餘額嘅收款');
+   feeAllocationOptions();
+   feeRenderCorrections();
+   feeRenderDiscounts();
+   v36BulkPreview();
+ }
+ // V3.5B: Never write to credit_uses or discounts directly from Safari.
+ // Database RPC atomically locks invoice + both credits and consumes two credits.
+ function feeEligibleCredits(studentId){
+   const reserved=new Set(feeState.makeupBookings.filter(b=>b.status!=='cancelled').map(b=>b.credit_id));
+   const used=new Set(feeState.creditUses.map(u=>u.credit_id));
+   return feeState.credits.filter(c=>{
+     if(c.student_id!==studentId||!c.is_active||used.has(c.id)||reserved.has(c.id))return false;
+     const a=feeState.leaves.find(a=>a.id===c.attendance_id);
+     return !!a&&a.student_id===studentId&&['sick','personal'].includes(a.status)&&a.leave_approval==='approved';
+   });
+ }
+ function feeCreditLabel(c){
+   const a=feeState.leaves.find(a=>a.id===c.attendance_id);
+   const session=feeState.sessions.find(s=>s.id===a?.session_id);
+   return (session?.session_date||'日期不詳')+' · '+(a?.status==='sick'?'病假':'事假')+' · '+c.id.slice(0,8);
+ }
+ function feeDiscountSelection(){
+   const i=feeState.invoices.find(i=>i.id===$('feeDiscountInvoice').value);
+   const candidates=i?feeEligibleCredits(i.student_id):[];
+   const first=$('feeDiscountCredit1').value,second=$('feeDiscountCredit2').value;
+   feeOptions('feeDiscountCredit1',candidates.map(c=>[c.id,feeCreditLabel(c)]),'選第一個額度');
+   feeOptions('feeDiscountCredit2',candidates.map(c=>[c.id,feeCreditLabel(c)]),'選第二個額度');
+   if(first&&first!==$('feeDiscountCredit1').value)$('feeDiscountCredit1').value='';
+   if(second&&second!==$('feeDiscountCredit2').value)$('feeDiscountCredit2').value='';
+   const discount=i?Math.round(feeCents(i.amount_due)/2):0;
+   const suitable=!!i&&discount>0&&feeBalance(i)>=discount&&candidates.length>=2;
+   const selected=$('feeDiscountCredit1').value&&$('feeDiscountCredit2').value&&$('feeDiscountCredit1').value!==$('feeDiscountCredit2').value;
+   $('feeDiscountPreview').textContent=!i?'請先選擇帳單。':
+     '原學費 '+feeMoney(i.amount_due)+'；已分配 '+feeMoney(feePaid(i.id)/100)+'；已折扣 '+feeMoney(feeDiscounted(i.id)/100)+
+     '；尚欠 '+feeMoney(feeBalance(i)/100)+'；本次預計抵扣 '+feeMoney(discount/100)+
+     '；可用額度 '+candidates.length+' 個。'+(!suitable?'目前唔符合扣費條件。':selected?'兩個額度已選妥。':'請選兩個不同額度。');
+   $('feeDiscountSave').disabled=feeBusy||!feeReady||!suitable||!selected;
+ }
+ function feeRenderDiscounts(){
+   const filter=$('feeStudentFilter').value;
+   const invoices=feeState.invoices.filter(i=>!filter||i.student_id===filter).filter(i=>{
+     const half=Math.round(feeCents(i.amount_due)/2);
+     return half>0&&feeBalance(i)>=half&&feeEligibleCredits(i.student_id).length>=2;
+   });
+   feeOptions('feeDiscountInvoice',invoices.map(i=>[i.id,feeName(i.student_id)+' · '+feeClass(i.class_id)+' · '+i.billing_month.slice(0,7)+' · 尚欠 '+feeMoney(feeBalance(i)/100)]),'選擇可抵扣帳單');
+   feeDiscountSelection();
+   const history=$('feeDiscountHistory');history.replaceChildren();
+   const rows=feeState.discounts.filter(d=>!filter||d.student_id===filter).sort((a,b)=>String(b.applied_at).localeCompare(String(a.applied_at)));
+   if(!rows.length)history.textContent='目前未有請假學費抵扣紀錄。';
+   for(const d of rows){
+     const i=feeState.invoices.find(i=>i.id===d.invoice_id),count=feeState.creditUses.filter(u=>u.discount_id===d.id).length;
+     const item=document.createElement('div');item.className='fee-audit-item';
+     const h=document.createElement('strong');h.textContent=feeName(d.student_id)+' · '+(i?.billing_month?.slice(0,7)||'未知月份')+' · '+feeMoney(d.amount);
+     const small=document.createElement('small');small.textContent=(i?feeClass(i.class_id)+' · ':'')+'使用額度 '+count+' 個 · '+new Date(d.applied_at).toLocaleString('zh-HK')+(d.notes?' · '+d.notes:'');
+     item.append(h,small);history.append(item);
+   }
+ }
+ $('feeDiscountInvoice').addEventListener('change',feeDiscountSelection);
+ $('feeDiscountCredit1').addEventListener('change',feeDiscountSelection);
+ $('feeDiscountCredit2').addEventListener('change',feeDiscountSelection);
+ $('feeDiscountForm').addEventListener('submit',async e=>{
+   e.preventDefault();const invoice=feeState.invoices.find(i=>i.id===$('feeDiscountInvoice').value);
+   const c1=$('feeDiscountCredit1').value,c2=$('feeDiscountCredit2').value;
+   const available=invoice?feeEligibleCredits(invoice.student_id):[];
+   const half=invoice?Math.round(feeCents(invoice.amount_due)/2):0;
+   if(!invoice||!c1||!c2||c1===c2||!available.some(c=>c.id===c1)||!available.some(c=>c.id===c2)||half<=0||feeBalance(invoice)<half){
+     say('feeDiscountMessage','抵扣條件唔符合；請重新載入、選擇同一學生兩個不同可用額度及有足夠欠款嘅帳單。');return;
+   }
+   await feeSafeAction('tkd_apply_tuition_discount',{
+     p_invoice_id:invoice.id,p_credit_1:c1,p_credit_2:c2,p_notes:$('feeDiscountNotes').value.trim()||null
+   },'feeDiscountMessage','feeDiscountSave',
+   '確認使用 '+feeName(invoice.student_id)+' 嘅兩個請假額度，永久抵扣 '+invoice.billing_month.slice(0,7)+' '+feeMoney(half/100)+'？操作不可自行撤銷，兩個額度將不能再補堂。','feeDiscountForm');
+ });
+ function feeAllocationOptions(){
+   const p=feeState.payments.find(x=>x.id===$('feeAllocationPayment').value);
+   const options=p?feeState.invoices.filter(i=>i.student_id===p.student_id&&feeBalance(i)>0&&!feeActiveAllocations().some(a=>a.payment_id===p.id&&a.invoice_id===i.id))
+     .map(i=>[i.id,i.billing_month.slice(0,7)+' · '+feeClass(i.class_id)+' · 尚欠 '+feeMoney(feeBalance(i)/100)]):[];
+   feeOptions('feeAllocationInvoice',options,p?'選擇未付清月份':'請先選收款');
+   const invoice=feeState.invoices.find(x=>x.id===$('feeAllocationInvoice').value);
+   const max=p&&invoice?Math.min(feeAvailable(p),feeBalance(invoice)):0;
+   $('feeAllocationAmount').max=max>0?(max/100).toFixed(2):'';
+   $('feeAllocationHint').textContent=p?('收款剩餘 '+feeMoney(feeAvailable(p)/100)+(invoice?'；本次最多分配 '+feeMoney(max/100):'；請選擇帳單')):'請先選擇收款。';
+ }
+ const feeMethods={cash:'現金',fps:'FPS',payme:'PayMe',bank_transfer:'銀行轉帳',other:'其他'};
+ function feeRenderCorrections(){
+   const filter=$('feeStudentFilter').value;
+   const ownPayment=p=>!!p&&(!filter||p.student_id===filter);
+   const payments=feeState.payments.filter(ownPayment);
+   const aChoices=feeActiveAllocations().filter(a=>ownPayment(feeState.payments.find(p=>p.id===a.payment_id)))
+     .map(a=>{
+       const p=feeState.payments.find(p=>p.id===a.payment_id);
+       const i=feeState.invoices.find(i=>i.id===a.invoice_id);
+       return [a.id,feeName(p?.student_id)+' · '+(i?.billing_month?.slice(0,7)||'未知月份')+' · '+feeMoney(a.allocated_amount)];
+     });
+   feeOptions('feeReverseAllocation',aChoices,'選擇有效分配');
+   const refundChoices=payments.filter(p=>feeAvailable(p)>0).map(p=>[p.id,feeName(p.student_id)+' · '+p.payment_date+' · 可退 '+feeMoney(feeAvailable(p)/100)]);
+   feeOptions('feeRefundPayment',refundChoices,'選擇有可退款餘額的收款');
+   const voidChoices=payments.filter(p=>!feeIsVoid(p.id)&&feeAllocated(p.id)===0&&feeRefunded(p.id)===0)
+     .map(p=>[p.id,feeName(p.student_id)+' · '+p.payment_date+' · '+feeMoney(p.amount)]);
+   feeOptions('feeVoidPayment',voidChoices,'選擇可作廢收款');
+   feeUpdateRefundHint();
+   const history=$('feeAuditList');history.replaceChildren();
+   const events=[];
+   for(const r of feeState.reversals){
+     const a=feeState.allocations.find(a=>a.id===r.allocation_id),p=feeState.payments.find(p=>p.id===a?.payment_id),i=feeState.invoices.find(i=>i.id===a?.invoice_id);
+     if(p&&ownPayment(p))events.push({when:r.reversed_at,title:'分配已撤銷 · '+feeName(p.student_id)+' · '+feeMoney(a.allocated_amount),subtitle:(i?.billing_month?.slice(0,7)||'未知月份')+' · '+r.reason});
+   }
+   for(const r of feeState.refunds){const p=feeState.payments.find(p=>p.id===r.payment_id);if(p&&ownPayment(p))events.push({when:r.created_at,title:'退款 · '+feeName(p.student_id)+' · '+feeMoney(r.amount),subtitle:r.refund_date+' · '+(feeMethods[r.refund_method]||r.refund_method)+' · '+(r.external_reference?'編號 '+r.external_reference+' · ':'')+r.reason});}
+   for(const v of feeState.voids){const p=feeState.payments.find(p=>p.id===v.payment_id);if(p&&ownPayment(p))events.push({when:v.voided_at,title:'收款已作廢 · '+feeName(p.student_id)+' · '+feeMoney(p.amount),subtitle:p.payment_date+' · '+v.reason});}
+   events.sort((a,b)=>String(b.when||'').localeCompare(String(a.when||'')));
+   if(!events.length)history.textContent='目前未有更正、退款或作廢紀錄。';
+   for(const e of events){const wrap=document.createElement('div');wrap.className='fee-audit-item';const strong=document.createElement('strong');strong.textContent=e.title;const small=document.createElement('small');small.textContent=(e.when?new Date(e.when).toLocaleString('zh-HK')+' · ':'')+e.subtitle;wrap.append(strong,small);history.append(wrap);}
+ }
+ function feeUpdateRefundHint(){
+   const p=feeState.payments.find(p=>p.id===$('feeRefundPayment').value);
+   const available=p?feeAvailable(p):0;
+   $('feeRefundAmount').max=p?(available/100).toFixed(2):'';
+   $('feeRefundHint').textContent=p?'可退款餘額 '+feeMoney(available/100)+'；只能退還未分配款。':'請先選擇收款。';
+ }
+ // Preserve the same request UUID after an uncertain network result; never generate a new
+ // one for the identical operation until the server response has been reconciled.
+ const feeRequests=new Map();
+ function feeRequestId(kind,details){
+   const key='tkd-v35a-'+kind+'-'+details;
+   let id=null;
+   try{id=window.sessionStorage.getItem(key);}catch(_){/* Safari private mode may block storage */}
+   if(!id){id=crypto.randomUUID();try{window.sessionStorage.setItem(key,id);}catch(_){} }
+   feeRequests.set(key,id);return {id,key};
+ }
+ function feeClearRequest(key){feeRequests.delete(key);try{window.sessionStorage.removeItem(key);}catch(_){} }
+ async function feeSafeAction(kind,params,messageId,buttonId,confirmText,formId){
+   if(!currentUser||feeBusy||!feeReady)return;
+   if(!window.confirm(confirmText+'\n\n請確認資料正確，此操作會留下不可刪除嘅審計紀錄。'))return;
+   const signature=JSON.stringify(params),token=feeRequestId(kind,signature);
+   feeBusy=true;$(buttonId).disabled=true;say(messageId,'正在提交 '+kind+'，請勿離開或重複操作…');
+   let ok=false;
+   try{
+     const {data,error}=await timeout(db.rpc(kind,{...params,p_request_id:token.id}));
+     if(error)throw error;
+     ok=true;feeClearRequest(token.key);
+     say(messageId,'資料庫已確認操作成功。請核對更新後紀錄。',true);
+     if(formId)$(formId).reset();
+   }catch(err){
+     say(messageId,'未能確認操作結果：'+errorText(err)+'。請先按「重新載入學費資料」查核；如真係未執行，使用完全相同資料重試會沿用原請求編號。');
+   }finally{
+     feeBusy=false;$(buttonId).disabled=false;
+     await loadTuitionData();
+     // Do not let a failed refresh silently imply a successful operation.
+     if(!feeReady&&!ok)say(messageId,'操作結果不明，資料亦未成功重載；請停止進一步更正並核對 Supabase 紀錄。');
+   }
+ }
+ $('feeRefundPayment').addEventListener('change',feeUpdateRefundHint);
+ $('feeReverseForm').addEventListener('submit',async e=>{
+   e.preventDefault();const allocationId=$('feeReverseAllocation').value,reason=$('feeReverseReason').value.trim();
+   const a=feeActiveAllocations().find(x=>x.id===allocationId);
+   if(!a||!reason){say('feeReverseMessage','請選擇有效分配及填寫原因。');return;}
+   await feeSafeAction('tkd_reverse_allocation',{p_allocation_id:allocationId,p_reason:reason},'feeReverseMessage','feeReverseSave','確認完整撤銷呢筆 '+feeMoney(a.allocated_amount)+' 分配？對應月份會恢復欠款。','feeReverseForm');
+ });
+ $('feeRefundForm').addEventListener('submit',async e=>{
+   e.preventDefault();const id=$('feeRefundPayment').value,raw=$('feeRefundAmount').value,amount=Number(raw),date=$('feeRefundDate').value,method=$('feeRefundMethod').value,reference=$('feeRefundReference').value.trim(),reason=$('feeRefundReason').value.trim();
+   const p=feeState.payments.find(x=>x.id===id);
+   if(!p||!raw||!Number.isFinite(amount)||feeCents(raw)<=0||feeCents(raw)>feeAvailable(p)||!date||reference.length<2||!reason){say('feeRefundMessage','請選擇收款，輸入不超過可退款餘額嘅正數金額、日期及原因。');return;}
+   await feeSafeAction('tkd_v36_confirm_refund',{p_payment_id:id,p_amount:amount,p_refund_date:date,p_refund_method:method,p_reference:reference,p_reason:reason},'feeRefundMessage','feeRefundSave','確認記錄退還 '+feeMoney(amount)+' 予 '+feeName(p.student_id)+'？請先核對實際款項處理。','feeRefundForm');
+ });
+ $('feeVoidForm').addEventListener('submit',async e=>{
+   e.preventDefault();const id=$('feeVoidPayment').value,reason=$('feeVoidReason').value.trim(),p=feeState.payments.find(p=>p.id===id);
+   if(!p||feeIsVoid(p.id)||feeAllocated(p.id)!==0||feeRefunded(p.id)!==0||!reason){say('feeVoidMessage','只有冇有效分配、冇退款嘅收款可以作廢，亦需要填寫原因。');return;}
+   await feeSafeAction('tkd_void_payment',{p_payment_id:id,p_reason:reason},'feeVoidMessage','feeVoidSave','確認作廢 '+feeName(p.student_id)+' 嘅 '+feeMoney(p.amount)+' 收款？原始紀錄會保留。','feeVoidForm');
+ });
+
+ function feePrefillSetting(){
+   const e=feeSelection($('feeSettingEnrollment').value);
+   const setting=e&&feeSetting(e.student_id,e.class_id);
+   $('feeSettingAmount').value=setting?Number(setting.monthly_fee).toFixed(2):'';
+   $('feeSettingNotes').value=setting?.notes||'';
+ }
+ function feePrefillInvoice(){
+   const e=feeSelection($('feeInvoiceEnrollment').value);
+   const setting=e&&feeSetting(e.student_id,e.class_id);
+   $('feeInvoiceAmount').value=setting?Number(setting.monthly_fee).toFixed(2):'';
+ }
+ async function loadTuitionData(){
+   if(!currentUser||feeBusy)return;
+   feeBusy=true;const token=++feeRequest;$('feeRefresh').disabled=true;
+   for(const id of ['feeSettingSave','feeInvoiceCreate','feePaymentCreate','feeAllocationSave','feeReverseSave','feeRefundSave','feeVoidSave','feeDiscountSave'])$(id).disabled=true;
+   say('feeMessage','學費資料正在載入…');
+   try{
+     const [settings,invoices,payments,allocations,reversals,refunds,voids,discounts,credits,creditUses,makeupBookings,leaves,sessions,people,cls,enr]=await Promise.all([
+       fetchAll('student_class_fees','id,student_id,class_id,monthly_fee,notes'),
+       fetchAll('tuition_invoices','id,student_id,class_id,billing_month,amount_due,notes'),
+       fetchAll('tuition_payments','id,student_id,payment_date,amount,payment_method,reference_no,notes'),
+       fetchAll('tuition_payment_allocations','id,payment_id,invoice_id,allocated_amount'),
+       fetchAll('tuition_allocation_reversals','id,allocation_id,request_id,reason,reversed_at'),
+       fetchAll('tuition_refunds','id,payment_id,request_id,amount,refund_date,refund_method,reason,external_reference,created_at'),
+       fetchAll('tuition_payment_voids','id,payment_id,request_id,reason,voided_at'),
+       fetchAll('tuition_discounts','id,invoice_id,student_id,request_id,amount,notes,approved_by,applied_at'),
+       fetchAll('leave_credits','id,attendance_id,student_id,is_active,created_at'),
+       fetchAll('credit_uses','id,credit_id,makeup_booking_id,discount_id,use_type,used_at'),
+       fetchAll('makeup_bookings','id,credit_id,status'),
+       fetchAll('attendance','id,session_id,student_id,status,leave_approval'),
+       fetchAll('class_sessions','id,class_id,session_date'),
+       fetchAll('students','id,student_name,status'),fetchAll('classes',classFields),
+       fetchAll('student_classes','id,student_id,class_id,joined_on,left_on')
+     ]);
+     if(token!==feeRequest||!currentUser)return;
+     feeState={settings,invoices,payments,allocations,reversals,refunds,voids,discounts,credits,creditUses,makeupBookings,leaves,sessions,people,classes:cls,enrollments:enr};
+     feeReady=true;feeRender();say('feeMessage','學費資料已更新。',true);
+   }catch(err){feeReady=false;say('feeMessage','學費資料載入失敗：'+errorText(err)+'。請重新載入，未確認完整資料前不可新增收款。');}
+   finally{feeBusy=false;$('feeRefresh').disabled=false;for(const id of ['feeSettingSave','feeInvoiceCreate','feePaymentCreate','feeAllocationSave','feeReverseSave','feeRefundSave','feeVoidSave','feeDiscountSave'])$(id).disabled=!feeReady;v36BulkPreview();}
+ }
+ async function feeWrite(table,payload,mode,buttonId,messageId,opts={}){
+   if(!currentUser||feeBusy||!feeReady)return;
+   if(!confirm(opts.confirmText||'確認儲存呢筆學費記錄？'))return;
+   feeBusy=true;$(buttonId).disabled=true;say(messageId,'正在儲存，請勿重複提交…');
+   try{
+     const query=mode==='upsert'?db.from(table).upsert(payload,{onConflict:opts.conflict}):db.from(table).insert(payload);
+     const {error}=await timeout(query);if(error)throw error;
+     say(messageId,'已提交。請核對以下重新載入嘅紀錄。',true);
+     if(opts.formId)$(opts.formId).reset();
+   }catch(err){say(messageId,'未能確認儲存：'+errorText(err)+'。如遇逾時，先重新載入核對，避免重複提交。');}
+   finally{feeBusy=false;$(buttonId).disabled=false;await loadTuitionData();}
+ }
+ $('feeRefresh').addEventListener('click',loadTuitionData);
+ $('feeStudentFilter').addEventListener('change',feeRender);
+ $('feeSettingEnrollment').addEventListener('change',feePrefillSetting);
+ $('feeInvoiceEnrollment').addEventListener('change',feePrefillInvoice);
+ $('feeAllocationPayment').addEventListener('change',feeAllocationOptions);
+ $('feeAllocationInvoice').addEventListener('change',feeAllocationOptions);
+ $('feeSettingForm').addEventListener('submit',async e=>{
+   e.preventDefault();const sel=feeSelection($('feeSettingEnrollment').value),v=$('feeSettingAmount').value;
+   if(!sel||!v||!Number.isFinite(Number(v))||feeCents(v)<0){say('feeSettingMessage','請選擇報讀關係及有效月費。');return;}
+   const payload={...sel,monthly_fee:Number(v),notes:$('feeSettingNotes').value.trim()||null,updated_at:new Date().toISOString()};
+   await feeWrite('student_class_fees',payload,'upsert','feeSettingSave','feeSettingMessage',{conflict:'student_id,class_id',confirmText:'確認儲存呢位學生於指定班別嘅月費？'});
+ });
+ $('feeInvoiceForm').addEventListener('submit',async e=>{
+   e.preventDefault();const sel=feeSelection($('feeInvoiceEnrollment').value),month=$('feeInvoiceMonth').value,v=$('feeInvoiceAmount').value;
+   if(!sel||!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)||!v||feeCents(v)<0||!Number.isFinite(Number(v))){say('feeInvoiceMessage','請選擇學生班別、月份及正確金額。');return;}
+   const date=month+'-01';
+   if(feeState.invoices.some(i=>i.student_id===sel.student_id&&i.class_id===sel.class_id&&i.billing_month===date)){
+     say('feeInvoiceMessage','此學生呢個班別已有該月帳單，請勿重複新增。');return;
+   }
+   await feeWrite('tuition_invoices',{...sel,billing_month:date,amount_due:Number(v),notes:$('feeInvoiceNotes').value.trim()||null},'insert','feeInvoiceCreate','feeInvoiceMessage',{formId:'feeInvoiceForm',confirmText:'確認建立 '+month+' 月帳單 '+feeMoney(v)+'？'});
+ });
+ $('feePaymentForm').addEventListener('submit',async e=>{
+   e.preventDefault();const sid=$('feePaymentStudent').value,date=$('feePaymentDate').value,v=$('feePaymentAmount').value,method=$('feePaymentMethod').value;
+   if(!feeState.people.some(p=>p.id===sid)||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!v||!Number.isFinite(Number(v))||feeCents(v)<=0){say('feePaymentMessage','請確認學生、付款日期同正數金額。');return;}
+   await feeSafeAction('tkd_v36_record_payment',{p_student_id:sid,p_payment_date:date,p_amount:Number(v),p_payment_method:method,p_reference_no:$('feePaymentReference').value.trim()||null,p_notes:$('feePaymentNotes').value.trim()||null},'feePaymentMessage','feePaymentCreate','確認已實際收到 '+feeName(sid)+' 嘅 '+feeMoney(v)+'？請核對實際入帳；本次收款會有伺服器端防重複請求保護。','feePaymentForm');
+   $('feePaymentDate').value=feeToday();
+ });
+ $('feeAllocationForm').addEventListener('submit',async e=>{
+   e.preventDefault();const pid=$('feeAllocationPayment').value,iid=$('feeAllocationInvoice').value,v=$('feeAllocationAmount').value;
+   const p=feeState.payments.find(x=>x.id===pid),i=feeState.invoices.find(x=>x.id===iid);
+   const cents=feeCents(v);
+   if(!p||!i||p.student_id!==i.student_id||!v||!Number.isFinite(Number(v))||cents<=0||cents>feeAvailable(p)||cents>feeBalance(i)||feeActiveAllocations().some(a=>a.payment_id===pid&&a.invoice_id===iid)){
+     say('feeAllocationMessage','分配無效：請檢查同一學生、帳單餘額及收款未分配金額。');return;
+   }
+   await feeWrite('tuition_payment_allocations',{payment_id:pid,invoice_id:iid,allocated_amount:Number(v)},'insert','feeAllocationSave','feeAllocationMessage',{formId:'feeAllocationForm',confirmText:'確認由 '+feeName(p.student_id)+' 收款分配 '+feeMoney(v)+' 至 '+i.billing_month.slice(0,7)+' 帳單？'});
+ });
+
+ // V3.6 integrated modules: dashboard + safe bulk monthly invoices + CSV finance reports.
+ // This remains inside the established V3.5B auth and Supabase lifecycle.
+ const v36MoneyCents=n=>Math.round((Number(n)||0)*100);
+ const v36WeekdayHK=()=>{const f=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Hong_Kong',weekday:'short'});return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(f.format(new Date()));};
+ const v36TodayHK=()=>{const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Hong_Kong',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const get=k=>parts.find(x=>x.type===k)?.value;return get('year')+'-'+get('month')+'-'+get('day');};
+ const v36MonthHK=()=>v36TodayHK().slice(0,7);
+ function v36NewInvoices(month){
+   if(!feeReady||!/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(month))return [];
+   const first=month+'-01',existing=new Set(feeState.invoices.map(i=>i.student_id+'|'+i.class_id+'|'+i.billing_month));
+   return feeState.enrollments.filter(e=>{
+     const student=feeState.people.find(p=>p.id===e.student_id),cls=feeState.classes.find(c=>c.id===e.class_id);
+     const monthly=feeSetting(e.student_id,e.class_id)?.monthly_fee??cls?.standard_monthly_fee;
+     return student?.status==='active' && cls?.is_active===true && (!e.joined_on||e.joined_on<=month+'-31')&&(!e.left_on||e.left_on>=first)
+       &&Number.isFinite(Number(monthly))&&Number(monthly)>=0
+       &&!existing.has(e.student_id+'|'+e.class_id+'|'+first);
+   });
+ }
+ function v36BulkPreview(){
+   if(!feeReady){$('v36BulkCount').textContent='—';$('v36BulkGo').disabled=true;return;}
+   const month=$('v36BulkMonth').value;
+   const candidates=v36NewInvoices(month);
+   $('v36BulkCount').textContent=String(candidates.length);
+   $('v36BulkGo').disabled=feeBusy||!candidates.length;
+   $('v36BulkList').textContent='本次預計新增 '+candidates.length+' 張帳單；已存在帳單會略過。'+(candidates.length?' 示例：'+candidates.slice(0,6).map(e=>feeName(e.student_id)+'／'+feeClass(e.class_id)).join('、'):'');
+ }
+ $('v36BulkMonth').value=v36MonthHK();
+ $('v36BulkMonth').addEventListener('change',v36BulkPreview);
+ $('v36BulkGo').addEventListener('click',async()=>{
+   if(!currentUser||!feeReady||feeBusy)return;
+   const month=$('v36BulkMonth').value,expected=v36NewInvoices(month).length;
+   if(!expected)return;
+   if(!confirm('確認為 '+month+' 建立約 '+expected+' 張帳單？已存在帳單不會更改；如網絡不明，先重新整理核對。'))return;
+   feeBusy=true;$('v36BulkGo').disabled=true;say('v36BulkMessage','正在建立帳單…');
+   try{
+     const {data,error}=await timeout(db.rpc('tkd_v36_generate_invoices',{p_month:month+'-01'}),60000);
+     if(error)throw error;
+     say('v36BulkMessage','資料庫已回應：'+JSON.stringify(data)+'。請重新載入核對。',true);
+   }catch(e){say('v36BulkMessage','未能確認結果：'+errorText(e)+'。請先重新整理；重複執行只會略過已存在帳單。');}
+   finally{feeBusy=false;await loadTuitionData();v36BulkPreview();}
+ });
+ async function v36LoadDashboard(){
+   if(!currentUser)return;
+   $('dashboardRefresh').disabled=true;say('dashboardMessage','正在讀取工作台資料…');
+   try{
+     const [people,cls,sessions,leave,bookings,invoices,discounts,payments,allocations,reversals,refunds,voids]=await Promise.all([
+       fetchAll('students','id,student_name,status'),fetchAll('classes',classFields),
+       fetchAll('class_sessions','id,class_id,session_date,status'),
+       fetchAll('attendance','id,status,leave_approval,session_id'),
+       fetchAll('makeup_bookings','id,credit_id,status'),
+       fetchAll('tuition_invoices','id,student_id,amount_due,billing_month'),
+       fetchAll('tuition_discounts','id,invoice_id,amount'),
+       fetchAll('tuition_payments','id,amount,student_id'),
+       fetchAll('tuition_payment_allocations','id,invoice_id,payment_id,allocated_amount'),
+       fetchAll('tuition_allocation_reversals','id,allocation_id'),
+       fetchAll('tuition_refunds','id,payment_id,amount'),
+       fetchAll('tuition_payment_voids','id,payment_id')
+     ]);
+     const day=v36WeekdayHK(),today=cls.filter(c=>c.is_active&&Number(c.day_of_week)===day);
+     const reversed=new Set(reversals.map(r=>r.allocation_id));const voided=new Set(voids.map(v=>v.payment_id));
+     const invoicePaid=id=>allocations.filter(a=>a.invoice_id===id&&!reversed.has(a.id)).reduce((n,a)=>n+v36MoneyCents(a.allocated_amount),0);
+     const debt=invoices.reduce((sum,i)=>sum+v36MoneyCents(i.amount_due)-invoicePaid(i.id)-discounts.filter(d=>d.invoice_id===i.id).reduce((n,d)=>n+v36MoneyCents(d.amount),0),0);
+     const unused=payments.filter(p=>!voided.has(p.id)).reduce((sum,p)=>sum+v36MoneyCents(p.amount)-allocations.filter(a=>a.payment_id===p.id&&!reversed.has(a.id)).reduce((n,a)=>n+v36MoneyCents(a.allocated_amount),0)-refunds.filter(r=>r.payment_id===p.id).reduce((n,r)=>n+v36MoneyCents(r.amount),0),0);
+     const stats={dashStudents:people.filter(p=>p.status==='active').length,dashToday:today.length,dashLeave:leave.filter(a=>['sick','personal'].includes(a.status)&&a.leave_approval==='pending').length,dashMakeups:bookings.filter(b=>b.status==='pending').length,dashDebt:feeMoney(debt/100),dashPrepaid:feeMoney(unused/100)};
+     for(const [id,val] of Object.entries(stats))$(id).textContent=val;
+     const list=$('dashClassList');list.replaceChildren();
+     if(!today.length)list.textContent='今日未有預設開課班別。';
+     for(const c of today){const el=document.createElement('p');el.className='fee-row';el.textContent=c.class_name+' · '+(c.start_time||'未定時間')+'–'+(c.end_time||'')+' · '+(c.location||'未定地點');list.append(el);}
+     say('dashboardMessage','工作台已更新。今日班別按香港時間計算。',true);
+   }catch(e){say('dashboardMessage','資料載入未完成：'+errorText(e)+'。請勿以空白統計判斷已繳清。');}
+   finally{$('dashboardRefresh').disabled=false;}
+ }
+ $('dashboardRefresh').addEventListener('click',v36LoadDashboard);
+ document.querySelectorAll('[data-v36-nav]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.v36Nav)));
+ function v36CsvSafe(v){
+   let x=String(v??'').replace(/[\r\n]+/g,' ').trim();
+   // Prevent spreadsheet formula injection when exported files are opened in Excel.
+   if(/^[=+@\-\t]/.test(x))x="'"+x;
+   return '"'+x.replace(/"/g,'""')+'"';
+ }
+ function v36DownloadCsv(name,rows){
+   const csv='\ufeff'+rows.map(row=>row.map(v36CsvSafe).join(',')).join('\r\n');
+   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+   a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ }
+ let v36ReportReady=false;
+ function v36RenderReports(){
+   if(!feeReady||!v36ReportReady)return;
+   const month=$('v36ReportMonth').value,sid=$('v36ReportStudent').value;
+   const inv=feeState.invoices.filter(i=>i.billing_month.startsWith(month)&&(!sid||sid===i.student_id));
+   const pays=feeState.payments.filter(p=>p.payment_date.startsWith(month)&&(!sid||sid===p.student_id));
+   const refunds=feeState.refunds.filter(r=>r.refund_date.startsWith(month));
+   const due=inv.reduce((n,i)=>n+feeCents(i.amount_due),0),debt=inv.reduce((n,i)=>n+feeBalance(i),0),discount=inv.reduce((n,i)=>n+feeDiscounted(i.id),0);
+   const receipts=pays.filter(p=>!feeIsVoid(p.id)).reduce((n,p)=>n+feeCents(p.amount),0)-refunds.filter(r=>{const p=feeState.payments.find(p=>p.id===r.payment_id);return p&&(!sid||p.student_id===sid)}).reduce((n,r)=>n+feeCents(r.amount),0);
+   const prepaid=feeState.payments.filter(p=>!sid||p.student_id===sid).reduce((n,p)=>n+feeAvailable(p),0);
+   for(const [k,v] of Object.entries({v36RDue:feeMoney(due/100),v36RDebt:feeMoney(debt/100),v36RReceived:feeMoney(receipts/100),v36RDiscount:feeMoney(discount/100),v36RUnassigned:feeMoney(prepaid/100),v36RCount:String(inv.length)}))$(k).textContent=v;
+   const debts=inv.filter(i=>feeBalance(i)>0).sort((a,b)=>b.billing_month.localeCompare(a.billing_month));
+   const table=$('v36ReportDebts');table.replaceChildren();
+   const t=document.createElement('table');t.className='v36-table';const header=document.createElement('tr');
+   for(const label of ['學生','班別','月份','應收','抵扣','欠款']){const th=document.createElement('th');th.textContent=label;header.append(th);}t.append(header);
+   for(const i of debts){const tr=document.createElement('tr');for(const value of [feeName(i.student_id),feeClass(i.class_id),i.billing_month.slice(0,7),feeMoney(i.amount_due),feeMoney(feeDiscounted(i.id)/100),feeMoney(feeBalance(i)/100)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}t.append(tr);}table.append(t);
+   say('v36ReportMessage','報表已更新；本月份欠款帳單 '+debts.length+' 張。',true);
+ }
+ async function v36LoadReports(){
+   if(!currentUser)return;
+   v36ReportReady=false;say('v36ReportMessage','正在讀取財務資料…');
+   await loadTuitionData();
+   if(!feeReady){say('v36ReportMessage','學費資料讀取失敗，停止報表匯出。');return;}
+   const prev=$('v36ReportStudent').value;
+   feeOptions('v36ReportStudent',feeState.people.map(p=>[p.id,p.student_name]),'全部學生');
+   if(feeState.people.some(p=>p.id===prev))$('v36ReportStudent').value=prev;
+   v36ReportReady=true;v36RenderReports();
+ }
+ $('v36ReportMonth').value=v36MonthHK();
+ $('v36ReportMonth').addEventListener('change',v36RenderReports);
+ $('v36ReportStudent').addEventListener('change',v36RenderReports);
+ $('v36ReportRefresh').addEventListener('click',v36LoadReports);
+ $('v36ExportDebts').addEventListener('click',()=>{
+   if(!v36ReportReady||!feeReady)return;
+   const month=$('v36ReportMonth').value,sid=$('v36ReportStudent').value;
+   v36DownloadCsv('TKD_欠費_'+month+'.csv', [['學生','班別','帳單月份','應收','付款分配','折扣','尚欠'], ...feeState.invoices.filter(i=>i.billing_month.startsWith(month)&&(!sid||sid===i.student_id)&&feeBalance(i)>0).map(i=>[feeName(i.student_id),feeClass(i.class_id),i.billing_month,Number(i.amount_due).toFixed(2),(feePaid(i.id)/100).toFixed(2),(feeDiscounted(i.id)/100).toFixed(2),(feeBalance(i)/100).toFixed(2)])]);
+ });
+ $('v36ExportPayments').addEventListener('click',()=>{
+   if(!v36ReportReady||!feeReady)return;
+   const month=$('v36ReportMonth').value,sid=$('v36ReportStudent').value;
+   v36DownloadCsv('TKD_收款_'+month+'.csv',[['學生','日期','收款金額','方式','已分配','已退款','尚未分配','作廢','參考編號'],...feeState.payments.filter(p=>p.payment_date.startsWith(month)&&(!sid||sid===p.student_id)).map(p=>[feeName(p.student_id),p.payment_date,Number(p.amount).toFixed(2),p.payment_method,(feeAllocated(p.id)/100).toFixed(2),(feeRefunded(p.id)/100).toFixed(2),(feeAvailable(p)/100).toFixed(2),feeIsVoid(p.id)?'是':'否',p.reference_no||''])]);
+ });
+ $('v36ExportInvoices').addEventListener('click',()=>{
+   if(!v36ReportReady||!feeReady)return;
+   const month=$('v36ReportMonth').value,sid=$('v36ReportStudent').value;
+   v36DownloadCsv('TKD_帳單_'+month+'.csv',[['學生','班別','月份','應收','已分配','請假抵扣','尚欠'],...feeState.invoices.filter(i=>i.billing_month.startsWith(month)&&(!sid||sid===i.student_id)).map(i=>[feeName(i.student_id),feeClass(i.class_id),i.billing_month,Number(i.amount_due).toFixed(2),(feePaid(i.id)/100).toFixed(2),(feeDiscounted(i.id)/100).toFixed(2),(feeBalance(i)/100).toFixed(2)])]);
+ });
+
+ function feeToday(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+ $('feePaymentDate').value=feeToday();$('feeInvoiceMonth').value=feeToday().slice(0,7);$('feeRefundDate').value=feeToday();
+
+ $('cancelButton').addEventListener('click',()=>{resetForm();say('studentMessage','');});
+ $('studentForm').addEventListener('submit',async e=>{
+  e.preventDefault(); if(savingStudent || !currentUser)return;
+  const payload={student_name:$('studentName').value.trim(),class_name:$('className').value.trim()||null,monthly_fee:Number($('fee').value),enrollment_date:$('enrollment').value||null,status:$('status').value,notes:$('notes').value.trim()||null};
+  if(!payload.student_name||!$('fee').value.trim()||!Number.isFinite(payload.monthly_fee)||payload.monthly_fee<0||!['active','inactive'].includes(payload.status)){
+   say('studentMessage','請檢查姓名、學費及狀態。');return;
+  }
+  savingStudent=true;$('saveButton').disabled=true;$('cancelButton').disabled=true;
+  say('studentMessage','正在儲存…');
+  try{
+   const query=editingId?db.from('students').update(payload).eq('id',editingId):db.from('students').insert(payload);
+   const {error}=await timeout(query);
+   if(error)throw error;
+   resetForm();say('studentMessage','已成功儲存學生。',true);
+   await loadStudents();
+  }catch(err){
+   say('studentMessage', '儲存未能確認：'+errorText(err)+' 如遇逾時，請先重新整理名單確認是否已儲存，避免重複新增。');
+  }finally{savingStudent=false;$('saveButton').disabled=false;$('cancelButton').disabled=false;}
+ });;
+}
+
+// ---- V3.6.1 independent full-schema transfer integration ----
+let v361PreviewArgs=null, v361Busy=false;
+function v361Reset(){v361PreviewArgs=null;$('v361Commit').disabled=true;$('v361Detail').textContent='未預覽';}
+function v361Options(id,items,field){
+ const el=$(id),old=el.value;el.replaceChildren();
+ for(const x of items){const o=document.createElement('option');o.value=x.id;o.textContent=x[field];el.append(o);}
+ if(items.some(x=>x.id===old))el.value=old;
+}
+function v361Populate(){
+ v361Options('v361Student',students,'student_name');
+ v361Options('v361From',classes,'class_name');
+ v361Options('v361To',classes.filter(c=>c.is_active),'class_name');
+ v361Reset();
+}
+for(const id of ['v361Student','v361From','v361To','v361Reason']){
+ $(id).addEventListener('change',v361Reset);
+ $(id).addEventListener('input',v361Reset);
+}
+function v361Args(preview){return {
+ p_student_id:$('v361Student').value,
+ p_from_class_id:$('v361From').value,
+ p_to_class_id:$('v361To').value,
+ p_reason:$('v361Reason').value.trim(),p_dry_run:preview
+};}
+function v361Validate(a){
+ if(!currentUser||!classesLoaded)throw new Error('請先登入及載入班別');
+ if(!a.p_student_id||!a.p_from_class_id||!a.p_to_class_id||a.p_from_class_id===a.p_to_class_id)throw new Error('請選擇不同的新舊班別');
+ if(a.p_reason.length<3||a.p_reason.length>500)throw new Error('請填寫 3–500 字原因');
+ if(!enrollments.some(e=>e.student_id===a.p_student_id&&e.class_id===a.p_from_class_id&&!e.left_on))throw new Error('此學生未正在報讀來源班別');
+}
+$('v361Preview').addEventListener('click',async()=>{
+ if(v361Busy)return;
+ v361Busy=true;v361Reset();$('v361Preview').disabled=true;
+ try{
+  const a=v361Args(true);v361Validate(a);
+  const {data,error}=await timeout(db.rpc('tkd_v361_full_transfer',a));
+  if(error)throw error;
+  v361PreviewArgs=a;$('v361Detail').textContent=JSON.stringify(data,null,2);
+  $('v361Commit').disabled=false;say('v361Status','預覽成功，資料尚未更改。',true);
+ }catch(e){say('v361Status','安全預覽拒絕：'+errorText(e));}
+ finally{v361Busy=false;$('v361Preview').disabled=false;}
+});
+$('v361Commit').addEventListener('click',async()=>{
+ if(v361Busy||!v361PreviewArgs)return;
+ const a=v361Args(true);if(JSON.stringify(a)!==JSON.stringify(v361PreviewArgs)){v361Reset();return;}
+ const person=students.find(x=>x.id===a.p_student_id)?.student_name||'?';
+ const from=classes.find(x=>x.id===a.p_from_class_id)?.class_name||'?';
+ const to=classes.find(x=>x.id===a.p_to_class_id)?.class_name||'?';
+ if(!confirm(`只限獨立測試：將 ${person} 由「${from}」改去「${to}」？`))return;
+ v361Busy=true;$('v361Commit').disabled=true;$('v361Preview').disabled=true;
+ try{
+  const {data,error}=await timeout(db.rpc('tkd_v361_full_transfer',{...a,p_dry_run:false}));
+  if(error)throw error;
+  say('v361Status','測試轉班完成，Audit ID：'+data.audit_id,true);
+  await loadStudents();await loadClasses();v361Reset();
+ }catch(e){v361Reset();say('v361Status','轉班未能確認：'+errorText(e)+'。請先重新整理，避免重複操作。');}
+ finally{v361Busy=false;$('v361Preview').disabled=false;}
+});
+
+</script>
+</body>
+</html>
